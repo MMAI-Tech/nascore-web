@@ -555,6 +555,53 @@
       renderProducts();
     }
 
+    function normalizeSearchText(text) {
+      return (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').trim();
+    }
+
+    function getWordVariants(word) {
+      const base = normalizeSearchText(word);
+      if (!base) return [];
+
+      const variants = new Set([base]);
+      const singular = base
+        .replace(/ies$/, 'y')
+        .replace(/sses$/, 'ss')
+        .replace(/es$/, '')
+        .replace(/s$/, '');
+
+      if (singular && singular !== base) variants.add(singular);
+
+      const plural = base.endsWith('y') && base.length > 1
+        ? `${base.slice(0, -1)}ies`
+        : base.endsWith('s')
+          ? `${base}es`
+          : `${base}s`;
+
+      if (plural && plural !== base) variants.add(plural);
+
+      return Array.from(variants);
+    }
+
+    function searchMatches(product, searchValue) {
+      const searchTerm = normalizeSearchText(searchValue);
+      if (!searchTerm) return true;
+
+      const searchableText = normalizeSearchText(`${product.name} ${product.description} ${product.category}`);
+      const searchWords = searchTerm.split(/\s+/).filter(Boolean);
+
+      return searchWords.every(searchWord => {
+        const wordVariants = getWordVariants(searchWord);
+        return wordVariants.some(variant => {
+          const tokens = searchableText.split(/\s+/).filter(Boolean);
+          return tokens.some(token => {
+            const tokenVariants = getWordVariants(token);
+            return tokenVariants.includes(variant) || token.includes(variant);
+          });
+        });
+      });
+    }
+
     function handleSearch() {
       renderProducts();
     }
@@ -563,11 +610,11 @@
       const grid = document.getElementById('productGrid');
       const noProd = document.getElementById('noProducts');
       
-      const searchVal = (document.getElementById('searchInput').value || document.getElementById('mobileSearchInput').value || '').toLowerCase();
+      const searchVal = normalizeSearchText(document.getElementById('searchInput').value || document.getElementById('mobileSearchInput').value || '');
 
       const filtered = products.filter(p => {
         const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
-        const matchesSearch = p.name.toLowerCase().includes(searchVal) || p.description.toLowerCase().includes(searchVal);
+        const matchesSearch = searchMatches(p, searchVal);
         return matchesCategory && matchesSearch;
       });
 
