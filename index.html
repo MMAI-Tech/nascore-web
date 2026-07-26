@@ -487,9 +487,49 @@
 
     const WHATSAPP_NUMBER = "923211103402";
     const categories = ["All", "Traditional", "Western", "Womens", "Footwear", "Accessories"];
+    const productReviews = {
+      1: [
+        { name: 'Ayesha', rating: 5, comment: 'Very elegant and comfortable.' },
+        { name: 'Haris', rating: 4, comment: 'Great fabric quality and finish.' }
+      ],
+      2: [
+        { name: 'Zain', rating: 4, comment: 'Perfect fit and premium look.' }
+      ],
+      3: [
+        { name: 'Nadia', rating: 5, comment: 'Stylish and durable jacket.' }
+      ],
+      4: [
+        { name: 'Sara', rating: 5, comment: 'Beautiful design and soft fabric.' }
+      ],
+      5: [
+        { name: 'Ali', rating: 4, comment: 'Very cozy and easy to wear.' }
+      ],
+      6: [
+        { name: 'Imran', rating: 5, comment: 'Premium leather and comfortable soles.' }
+      ],
+      7: [
+        { name: 'Mina', rating: 4, comment: 'Clean design and good finishing.' }
+      ],
+      8: [
+        { name: 'Rabia', rating: 5, comment: 'Excellent embroidery and fit.' }
+      ],
+      9: [
+        { name: 'Omer', rating: 4, comment: 'Looks great and feels light.' }
+      ],
+      10: [
+        { name: 'Faisal', rating: 4, comment: 'Neat wallet with good storage space.' }
+      ],
+      11: [
+        { name: 'Bilal', rating: 5, comment: 'Classic look and strong stitching.' }
+      ],
+      12: [
+        { name: 'Khan', rating: 4, comment: 'Great shades for daily use.' }
+      ]
+    };
     let activeCategory = "All";
     let cart = JSON.parse(localStorage.getItem('nascore_cart')) || [];
     let selectedSize = 'M';
+    let orderHistory = JSON.parse(localStorage.getItem('nascore_orders')) || [];
 
     document.addEventListener('DOMContentLoaded', () => {
       initThemeUI();
@@ -699,6 +739,101 @@
       `).join('');
     }
 
+    function getAverageRating(productId) {
+      const reviews = productReviews[productId] || [];
+      if (!reviews.length) return 0;
+      const total = reviews.reduce((acc, review) => acc + review.rating, 0);
+      return (total / reviews.length).toFixed(1);
+    }
+
+    function getReviewSummary(productId) {
+      const reviews = productReviews[productId] || [];
+      const average = getAverageRating(productId);
+      return {
+        average: Number(average),
+        count: reviews.length
+      };
+    }
+
+    function hasPurchasedProduct(productId) {
+      return orderHistory.some(order => order.items.some(item => item.id === productId));
+    }
+
+    function renderReviews(productId) {
+      const reviews = productReviews[productId] || [];
+      const reviewSummary = getReviewSummary(productId);
+      const reviewList = document.getElementById('reviewList');
+      if (!reviewList) return;
+
+      reviewList.innerHTML = reviews.length ? reviews.map(review => `
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/70 p-2.5">
+          <div class="flex items-center justify-between text-[11px] mb-1">
+            <span class="font-bold text-gray-800 dark:text-gray-200">${review.name}</span>
+            <span class="text-amber-500">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>
+          </div>
+          <p class="text-[11px] text-gray-600 dark:text-gray-300">${review.comment}</p>
+        </div>
+      `).join('') : '<p class="text-[11px] text-gray-500 dark:text-gray-400">No reviews yet. Be the first to rate this product.</p>';
+
+      const reviewSummaryEl = document.getElementById('reviewSummary');
+      if (reviewSummaryEl) {
+        reviewSummaryEl.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-lg font-black text-gray-900 dark:text-white">${reviewSummary.average.toFixed(1)}</span>
+            <div class="text-amber-500 text-sm">${'★'.repeat(Math.round(reviewSummary.average))}${'☆'.repeat(5 - Math.round(reviewSummary.average))}</div>
+          </div>
+          <p class="text-[11px] text-gray-500 dark:text-gray-400">${reviewSummary.count} review${reviewSummary.count === 1 ? '' : 's'}</p>
+        `;
+      }
+
+      const reviewFormContainer = document.getElementById('reviewFormContainer');
+      if (reviewFormContainer) {
+        reviewFormContainer.innerHTML = hasPurchasedProduct(productId)
+          ? `
+            <h3 class="text-[11px] font-black uppercase tracking-wide text-gray-800 dark:text-gray-200 mb-2">Leave a Review</h3>
+            <form id="reviewForm" onsubmit="event.preventDefault(); submitReview(${productId});" class="space-y-2">
+              <input id="reviewName" type="text" placeholder="Your name" class="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <select id="reviewRating" class="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="">Select rating</option>
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Very Good</option>
+                <option value="3">3 - Good</option>
+                <option value="2">2 - Fair</option>
+                <option value="1">1 - Poor</option>
+              </select>
+              <textarea id="reviewComment" rows="2" placeholder="Write your feedback..." class="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+              <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2 rounded-lg text-xs transition">Submit Review</button>
+            </form>
+          `
+          : `<p class="text-[11px] text-gray-500 dark:text-gray-400">Only customers who have placed an order can leave a review.</p>`;
+      }
+    }
+
+    function submitReview(productId) {
+      const name = document.getElementById('reviewName').value.trim();
+      const comment = document.getElementById('reviewComment').value.trim();
+      const rating = Number(document.getElementById('reviewRating').value);
+
+      if (!hasPurchasedProduct(productId)) {
+        alert('Only customers who have placed an order can leave a review.');
+        return;
+      }
+
+      if (!name || !comment || !rating) {
+        alert('Please enter your name, comment and rating.');
+        return;
+      }
+
+      if (!productReviews[productId]) {
+        productReviews[productId] = [];
+      }
+
+      productReviews[productId].push({ name, rating, comment });
+      document.getElementById('reviewForm').reset();
+      renderReviews(productId);
+      alert('Thank you for your review!');
+    }
+
     function openModal(productId, shouldUpdateUrl = true) {
       const p = products.find(item => item.id === productId);
       if (!p) return;
@@ -741,6 +876,16 @@
                 `).join('')}
               </div>
             </div>
+
+            <div class="mb-4 border-t border-gray-100 dark:border-gray-800 pt-3">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-[11px] font-black uppercase tracking-wide text-gray-800 dark:text-gray-200">Customer Ratings</h3>
+                <div id="reviewSummary"></div>
+              </div>
+              <div id="reviewList" class="space-y-2"></div>
+            </div>
+
+            <div id="reviewFormContainer" class="mb-4 border-t border-gray-100 dark:border-gray-800 pt-3"></div>
           </div>
 
           <div class="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
@@ -756,6 +901,8 @@
           </div>
         </div>
       `;
+
+      renderReviews(productId);
 
       const modal = document.getElementById('productModal');
       const container = document.getElementById('modalContainer');
@@ -922,6 +1069,18 @@
       }
     }
 
+    function saveOrderToHistory(orderItems, notes = '') {
+      const order = {
+        id: Date.now(),
+        items: orderItems.map(item => ({ id: item.id, name: item.name, size: item.size, quantity: item.quantity, price: item.price })),
+        notes,
+        createdAt: new Date().toISOString()
+      };
+
+      orderHistory.push(order);
+      localStorage.setItem('nascore_orders', JSON.stringify(orderHistory));
+    }
+
     function checkoutWhatsApp() {
       if (cart.length === 0) {
         alert("Cart is empty!");
@@ -929,7 +1088,8 @@
       }
 
       const notes = document.getElementById('orderNotes').value.trim();
-      let text = `*NEW ORDER - NASCore*%0A`;
+      let text = `*ORDER CONFIRMATION - NASCore*%0A%0A`;
+      text += `Hello! I would like to confirm my order.%0A`;
       text += `---------------------------------%0A`;
 
       let total = 0;
@@ -947,22 +1107,28 @@
         text += `*Customer Note:* ${notes}%0A`;
       }
       text += `---------------------------------%0A`;
-      text += `Please confirm my order details.`;
+      text += `Please confirm my order and share delivery details.`;
 
+      saveOrderToHistory(cart, notes);
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
+      cart = [];
+      localStorage.setItem('nascore_cart', JSON.stringify(cart));
+      updateCartUI();
+      toggleCart();
     }
 
     function quickWhatsAppOrder(productId) {
       const p = products.find(item => item.id === productId);
       if(!p) return;
 
-      let text = `*DIRECT PRODUCT INQUIRY - NASCore*%0A%0A`;
-      text += `I want to order:%0A`;
+      let text = `*DIRECT PRODUCT ORDER - NASCore*%0A%0A`;
+      text += `I want to place an order for:%0A`;
       text += `*Product:* ${p.name}%0A`;
       text += `*Price:* Rs. ${p.price.toLocaleString()}%0A`;
       text += `*Size:* ${selectedSize}%0A%0A`;
-      text += `Please share availability and order confirmation!`;
+      text += `Please confirm availability and delivery details.`;
 
+      saveOrderToHistory([{ id: p.id, name: p.name, size: selectedSize, quantity: 1, price: p.price }], 'Quick order');
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
     }
   </script>
