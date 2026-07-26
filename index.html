@@ -108,6 +108,11 @@
           <i id="themeIcon" class="fa-solid fa-moon text-base sm:text-lg"></i>
         </button>
 
+        <!-- Admin access is intentionally kept separate from customer shopping -->
+        <button onclick="openAdmin()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold transition" title="Admin login">
+          <i class="fa-solid fa-user-shield"></i><span>Admin</span>
+        </button>
+
         <!-- Direct WhatsApp Quick Chat -->
         <a href="https://wa.me/923211103402" target="_blank" class="flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 font-semibold text-xs px-3 py-2 rounded-full border border-emerald-200 dark:border-emerald-800 transition">
           <i class="fa-brands fa-whatsapp text-emerald-600 dark:text-emerald-400 text-base"></i>
@@ -256,6 +261,44 @@
     </div>
   </div>
 
+  <!-- ADMIN LOGIN & PRODUCT MANAGEMENT -->
+  <div id="adminModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200 p-4">
+    <div id="adminContainer" class="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-gray-900 shadow-2xl scale-95 transition-transform duration-200">
+      <div class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur px-5 py-4">
+        <div><h2 class="font-black text-gray-900 dark:text-white">Admin Panel</h2><p class="text-xs text-gray-500 dark:text-gray-400">Manage your store products</p></div>
+        <button onclick="closeAdmin()" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="adminLoginView" class="max-w-sm mx-auto p-6 sm:p-8">
+        <p class="text-sm text-gray-600 dark:text-gray-300 mb-5">Sign in to add, edit, or remove products.</p>
+        <form onsubmit="event.preventDefault(); adminLogin();" class="space-y-3">
+          <input id="adminUsername" autocomplete="username" required placeholder="Username" class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Password" class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <p id="adminLoginError" class="hidden text-xs font-semibold text-red-600"></p>
+          <button class="w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-sm font-extrabold text-white">Sign in</button>
+        </form>
+      </div>
+      <div id="adminDashboard" class="hidden p-4 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+          <div><h3 class="font-black text-gray-900 dark:text-white">Product Manager</h3><p class="text-xs text-gray-500 dark:text-gray-400">Changes are saved on this browser immediately.</p></div>
+          <button onclick="adminLogout()" class="rounded-xl border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"><i class="fa-solid fa-right-from-bracket mr-1"></i>Logout</button>
+        </div>
+        <form id="productForm" onsubmit="event.preventDefault(); saveAdminProduct();" class="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700 p-4 mb-6">
+          <input id="editingProductId" type="hidden">
+          <input id="adminProductName" required placeholder="Product name" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
+          <input id="adminProductPrice" required min="0" type="number" placeholder="Price (Rs.)" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
+          <input id="adminProductOriginalPrice" min="0" type="number" placeholder="Cut/original price (optional)" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
+          <label class="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200"><input id="adminProductInStock" type="checkbox" class="h-4 w-4 accent-brand-600" checked> In stock</label>
+          <input id="adminProductImage" required type="url" placeholder="Product image URL" class="sm:col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
+          <select id="adminProductCategory" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm"></select>
+          <input id="adminProductBadge" placeholder="Badge e.g. New (optional)" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
+          <textarea id="adminProductDescription" required rows="3" placeholder="Product description" class="sm:col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm"></textarea>
+          <div class="sm:col-span-2 flex gap-2 justify-end"><button type="button" onclick="resetProductForm()" class="rounded-xl px-4 py-2.5 text-xs font-bold text-gray-600 dark:text-gray-300">Cancel</button><button id="productSaveButton" class="rounded-xl bg-brand-600 hover:bg-brand-700 px-4 py-2.5 text-xs font-extrabold text-white"><i class="fa-solid fa-plus mr-1"></i>Add Product</button></div>
+        </form>
+        <div id="adminProductList" class="space-y-2"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- CART DRAWER -->
   <div id="cartDrawer" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs opacity-0 pointer-events-none transition-opacity duration-300">
     <div class="fixed right-0 top-0 h-full w-full max-w-sm sm:max-w-md bg-white dark:bg-gray-900 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col" id="drawerContainer">
@@ -350,7 +393,7 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    const products = [
+    const defaultProducts = [
       {
         id: 1,
         name: "Embroidered Cotton Kurta",
@@ -485,6 +528,11 @@
       }
     ];
 
+    // Product catalogue is persisted in this browser so admin edits survive refreshes.
+    // A static site cannot protect credentials: use a backend before publishing a real admin account.
+    let products = JSON.parse(localStorage.getItem('nascore_products') || 'null') || defaultProducts;
+    const ADMIN_USERNAME = 'admin';
+    const ADMIN_PASSWORD = 'nascore2026';
     const WHATSAPP_NUMBER = "923211103402";
     const categories = ["All", "Traditional", "Western", "Womens", "Footwear", "Accessories"];
     const productReviews = {
@@ -532,11 +580,13 @@
     let orderHistory = JSON.parse(localStorage.getItem('nascore_orders')) || [];
 
     document.addEventListener('DOMContentLoaded', () => {
+      products = products.map(product => ({ ...product, inStock: product.inStock !== false }));
       initThemeUI();
       renderCategoryTabs();
       renderProducts();
       updateCartUI();
       openProductFromUrl();
+      if (sessionStorage.getItem('nascore_admin_logged_in') === 'true') showAdminDashboard();
 
       // System Preference Change Listener
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
@@ -594,6 +644,131 @@
       activeCategory = category;
       renderCategoryTabs();
       renderProducts();
+    }
+
+    // Admin panel (front-end demo). Customers never need to sign in.
+    function openAdmin() {
+      const modal = document.getElementById('adminModal');
+      const container = document.getElementById('adminContainer');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      container.classList.remove('scale-95');
+      if (sessionStorage.getItem('nascore_admin_logged_in') === 'true') showAdminDashboard();
+      else showAdminLogin();
+    }
+
+    function closeAdmin() {
+      const modal = document.getElementById('adminModal');
+      const container = document.getElementById('adminContainer');
+      container.classList.add('scale-95');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function showAdminLogin() {
+      document.getElementById('adminLoginView').classList.remove('hidden');
+      document.getElementById('adminDashboard').classList.add('hidden');
+    }
+
+    function showAdminDashboard() {
+      document.getElementById('adminLoginView').classList.add('hidden');
+      document.getElementById('adminDashboard').classList.remove('hidden');
+      renderAdminProductList();
+      resetProductForm();
+    }
+
+    function adminLogin() {
+      const username = document.getElementById('adminUsername').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      const error = document.getElementById('adminLoginError');
+      if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+        error.textContent = 'Incorrect username or password.';
+        error.classList.remove('hidden');
+        return;
+      }
+      error.classList.add('hidden');
+      document.getElementById('adminPassword').value = '';
+      sessionStorage.setItem('nascore_admin_logged_in', 'true');
+      showAdminDashboard();
+    }
+
+    function adminLogout() {
+      sessionStorage.removeItem('nascore_admin_logged_in');
+      showAdminLogin();
+    }
+
+    function persistProducts() {
+      localStorage.setItem('nascore_products', JSON.stringify(products));
+    }
+
+    function renderAdminProductList() {
+      const list = document.getElementById('adminProductList');
+      if (!list) return;
+      list.innerHTML = products.map(product => `
+        <div class="flex items-center gap-3 rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5">
+          <img src="${product.image}" alt="" class="w-12 h-12 rounded-lg object-cover bg-gray-100">
+          <div class="min-w-0 flex-1"><p class="truncate text-sm font-bold text-gray-900 dark:text-white">${product.name}</p><p class="text-xs text-gray-500 dark:text-gray-400">${product.category} · Rs. ${Number(product.price).toLocaleString()} · <span class="${product.inStock === false ? 'text-red-500' : 'text-emerald-600'} font-bold">${product.inStock === false ? 'Out of stock' : 'In stock'}</span></p></div>
+          <div class="flex gap-1"><button onclick="editAdminProduct(${product.id})" class="rounded-lg p-2 text-brand-600 hover:bg-brand-50 dark:hover:bg-gray-700" title="Edit"><i class="fa-solid fa-pen"></i></button><button onclick="deleteAdminProduct(${product.id})" class="rounded-lg p-2 text-red-500 hover:bg-red-50 dark:hover:bg-gray-700" title="Delete"><i class="fa-solid fa-trash"></i></button></div>
+        </div>
+      `).join('') || '<p class="py-6 text-center text-sm text-gray-500">No products yet.</p>';
+    }
+
+    function resetProductForm() {
+      const form = document.getElementById('productForm');
+      if (!form) return;
+      form.reset();
+      document.getElementById('editingProductId').value = '';
+      document.getElementById('adminProductCategory').innerHTML = categories.filter(c => c !== 'All').map(c => `<option value="${c}">${c}</option>`).join('');
+      document.getElementById('productSaveButton').innerHTML = '<i class="fa-solid fa-plus mr-1"></i>Add Product';
+    }
+
+    function editAdminProduct(productId) {
+      const product = products.find(item => item.id === productId);
+      if (!product) return;
+      document.getElementById('editingProductId').value = product.id;
+      document.getElementById('adminProductName').value = product.name;
+      document.getElementById('adminProductPrice').value = product.price;
+      document.getElementById('adminProductOriginalPrice').value = product.originalPrice || '';
+      document.getElementById('adminProductImage').value = product.image;
+      document.getElementById('adminProductDescription').value = product.description;
+      document.getElementById('adminProductBadge').value = product.badge || '';
+      document.getElementById('adminProductInStock').checked = product.inStock !== false;
+      const categorySelect = document.getElementById('adminProductCategory');
+      if (!Array.from(categorySelect.options).some(option => option.value === product.category)) categorySelect.add(new Option(product.category, product.category));
+      categorySelect.value = product.category;
+      document.getElementById('productSaveButton').innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i>Save Changes';
+      document.getElementById('productForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function saveAdminProduct() {
+      const id = Number(document.getElementById('editingProductId').value);
+      const name = document.getElementById('adminProductName').value.trim();
+      const price = Number(document.getElementById('adminProductPrice').value);
+      const originalPriceInput = document.getElementById('adminProductOriginalPrice').value;
+      const originalPrice = originalPriceInput === '' ? null : Number(originalPriceInput);
+      const image = document.getElementById('adminProductImage').value.trim();
+      const category = document.getElementById('adminProductCategory').value;
+      const badge = document.getElementById('adminProductBadge').value.trim();
+      const description = document.getElementById('adminProductDescription').value.trim();
+      const inStock = document.getElementById('adminProductInStock').checked;
+      if (!name || !image || !description || !Number.isFinite(price) || price < 0 || (originalPrice !== null && (!Number.isFinite(originalPrice) || originalPrice < 0))) return;
+      const product = { id: id || Date.now(), name, price, originalPrice, image, category, badge, description, inStock };
+      if (id) products = products.map(item => item.id === id ? { ...item, ...product } : item);
+      else products.unshift(product);
+      persistProducts();
+      renderProducts();
+      renderAdminProductList();
+      resetProductForm();
+    }
+
+    function deleteAdminProduct(productId) {
+      const product = products.find(item => item.id === productId);
+      if (!product || !window.confirm(`Delete “${product.name}”? This cannot be undone.`)) return;
+      products = products.filter(item => item.id !== productId);
+      cart = cart.filter(item => item.id !== productId);
+      delete productReviews[productId];
+      persistProducts();
+      updateCartUI();
+      renderProducts();
+      renderAdminProductList();
     }
 
     function getProductIdFromUrl() {
@@ -712,6 +887,7 @@
                 ${p.badge}
               </span>
             ` : ''}
+            ${p.inStock === false ? '<span class="absolute inset-0 flex items-center justify-center bg-black/55 text-xs font-black uppercase tracking-wider text-white">Out of Stock</span>' : ''}
           </div>
 
           <div class="p-2.5 sm:p-4 flex-grow flex flex-col justify-between">
@@ -728,8 +904,8 @@
                 <span class="text-xs sm:text-base font-black text-gray-900 dark:text-white">Rs. ${p.price.toLocaleString()}</span>
               </div>
 
-              <button onclick="addToCart(${p.id})" 
-                class="bg-brand-50 dark:bg-gray-800 hover:bg-brand-600 dark:hover:bg-brand-600 text-brand-700 dark:text-brand-300 hover:text-white dark:hover:text-white font-bold p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition active:scale-95">
+              <button onclick="addToCart(${p.id})" ${p.inStock === false ? 'disabled title="Out of stock"' : ''}
+                class="bg-brand-50 dark:bg-gray-800 hover:bg-brand-600 dark:hover:bg-brand-600 text-brand-700 dark:text-brand-300 hover:text-white dark:hover:text-white font-bold p-2 sm:p-2.5 rounded-lg sm:rounded-xl transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-brand-50">
                 <i class="fa-solid fa-cart-plus text-xs sm:text-sm"></i>
               </button>
             </div>
@@ -854,7 +1030,7 @@
           <div>
             <div class="flex items-center justify-between mb-1">
               <span class="bg-brand-100 dark:bg-brand-950/80 text-brand-700 dark:text-brand-300 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">${p.category}</span>
-              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-check-circle mr-1"></i> In Stock</span>
+              <span class="text-[11px] font-semibold ${p.inStock === false ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}"><i class="fa-solid ${p.inStock === false ? 'fa-circle-xmark' : 'fa-check-circle'} mr-1"></i> ${p.inStock === false ? 'Out of Stock' : 'In Stock'}</span>
             </div>
 
             <h2 class="text-lg sm:text-xl font-black text-gray-900 dark:text-white mb-1">${p.name}</h2>
@@ -889,13 +1065,13 @@
           </div>
 
           <div class="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
-            <button onclick="addToCart(${p.id}, selectedSize); closeModal();" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-2.5 rounded-xl transition text-xs sm:text-sm shadow-md">
-              <i class="fa-solid fa-cart-shopping mr-1"></i> Add to Cart
+            <button onclick="addToCart(${p.id}, selectedSize); closeModal();" ${p.inStock === false ? 'disabled' : ''} class="w-full bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-2.5 rounded-xl transition text-xs sm:text-sm shadow-md disabled:cursor-not-allowed disabled:opacity-40">
+              <i class="fa-solid fa-cart-shopping mr-1"></i> ${p.inStock === false ? 'Currently Unavailable' : 'Add to Cart'}
             </button>
             <button onclick="shareProductLink(${p.id})" class="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-xs sm:text-sm transition flex items-center justify-center gap-1.5">
               <i class="fa-solid fa-share-nodes"></i> Share Product
             </button>
-            <button onclick="quickWhatsAppOrder(${p.id})" class="w-full bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 font-bold py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800 text-xs sm:text-sm transition flex items-center justify-center gap-1.5">
+            <button onclick="quickWhatsAppOrder(${p.id})" ${p.inStock === false ? 'disabled' : ''} class="w-full bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 font-bold py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800 text-xs sm:text-sm transition flex items-center justify-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-40">
               <i class="fa-brands fa-whatsapp text-base text-emerald-600 dark:text-emerald-400"></i> Direct Order via WhatsApp
             </button>
           </div>
@@ -974,6 +1150,10 @@
     function addToCart(productId, customSize = 'M') {
       const product = products.find(p => p.id === productId);
       if (!product) return;
+      if (product.inStock === false) {
+        alert('This product is currently out of stock.');
+        return;
+      }
 
       const existingItem = cart.find(item => item.id === productId && item.size === customSize);
 
@@ -1120,6 +1300,10 @@
     function quickWhatsAppOrder(productId) {
       const p = products.find(item => item.id === productId);
       if(!p) return;
+      if (p.inStock === false) {
+        alert('This product is currently out of stock.');
+        return;
+      }
 
       let text = `*DIRECT PRODUCT ORDER - NASCore*%0A%0A`;
       text += `I want to place an order for:%0A`;
