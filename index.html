@@ -496,6 +496,7 @@
       renderCategoryTabs();
       renderProducts();
       updateCartUI();
+      openProductFromUrl();
 
       // System Preference Change Listener
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
@@ -553,6 +554,40 @@
       activeCategory = category;
       renderCategoryTabs();
       renderProducts();
+    }
+
+    function getProductIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const productId = parseInt(params.get('product'), 10);
+      return Number.isInteger(productId) ? productId : null;
+    }
+
+    function updateProductUrl(productId) {
+      const url = new URL(window.location.href);
+      if (productId) {
+        url.searchParams.set('product', productId);
+      } else {
+        url.searchParams.delete('product');
+      }
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    function openProductFromUrl() {
+      const productId = getProductIdFromUrl();
+      if (!productId) return;
+
+      const product = products.find(item => item.id === productId);
+      if (!product) return;
+
+      activeCategory = 'All';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('mobileSearchInput').value = '';
+      renderCategoryTabs();
+      renderProducts();
+
+      setTimeout(() => {
+        openModal(productId, false);
+      }, 80);
     }
 
     function normalizeSearchText(text) {
@@ -664,11 +699,15 @@
       `).join('');
     }
 
-    function openModal(productId) {
+    function openModal(productId, shouldUpdateUrl = true) {
       const p = products.find(item => item.id === productId);
       if (!p) return;
 
       selectedSize = 'M';
+
+      if (shouldUpdateUrl) {
+        updateProductUrl(productId);
+      }
 
       const modalContent = document.getElementById('modalContent');
       modalContent.innerHTML = `
@@ -708,6 +747,9 @@
             <button onclick="addToCart(${p.id}, selectedSize); closeModal();" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-2.5 rounded-xl transition text-xs sm:text-sm shadow-md">
               <i class="fa-solid fa-cart-shopping mr-1"></i> Add to Cart
             </button>
+            <button onclick="shareProductLink(${p.id})" class="w-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-xs sm:text-sm transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-share-nodes"></i> Share Product
+            </button>
             <button onclick="quickWhatsAppOrder(${p.id})" class="w-full bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 font-bold py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800 text-xs sm:text-sm transition flex items-center justify-center gap-1.5">
               <i class="fa-brands fa-whatsapp text-base text-emerald-600 dark:text-emerald-400"></i> Direct Order via WhatsApp
             </button>
@@ -738,6 +780,35 @@
       container.classList.remove('translate-y-0', 'sm:scale-100');
       container.classList.add('translate-y-full', 'sm:scale-95');
       modal.classList.add('opacity-0', 'pointer-events-none');
+      updateProductUrl(null);
+    }
+
+    async function shareProductLink(productId) {
+      const p = products.find(item => item.id === productId);
+      if (!p) return;
+
+      const shareUrl = new URL(window.location.href);
+      shareUrl.searchParams.set('product', p.id);
+      shareUrl.hash = '';
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: p.name,
+            text: `Check this product on NASCore: ${p.name}`,
+            url: shareUrl.toString()
+          });
+        } catch (error) {
+          console.log('Share canceled', error);
+        }
+      } else {
+        try {
+          await navigator.clipboard.writeText(shareUrl.toString());
+          alert('Product link copied to clipboard');
+        } catch (error) {
+          window.prompt('Copy this product link:', shareUrl.toString());
+        }
+      }
     }
 
     function toggleCart() {
