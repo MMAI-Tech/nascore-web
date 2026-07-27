@@ -288,7 +288,12 @@
           <input id="adminProductPrice" required min="0" type="number" placeholder="Price (Rs.)" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
           <input id="adminProductOriginalPrice" min="0" type="number" placeholder="Cut/original price (optional)" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
           <label class="flex items-center gap-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200"><input id="adminProductInStock" type="checkbox" class="h-4 w-4 accent-brand-600" checked> In stock</label>
-          <input id="adminProductImage" required type="url" placeholder="Product image URL" class="sm:col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
+          <div class="sm:col-span-2">
+            <label for="adminProductImage" class="mb-1.5 block text-xs font-bold text-gray-700 dark:text-gray-200">Product image</label>
+            <input id="adminProductImage" onchange="readAdminImage(this)" accept="image/png,image/jpeg,image/webp" type="file" class="block w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs text-gray-600 dark:text-gray-300 file:mr-3 file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-xs file:font-bold file:text-brand-700 hover:file:bg-brand-100 dark:file:bg-gray-800 dark:file:text-brand-300">
+            <p class="mt-1 text-[11px] text-gray-500 dark:text-gray-400">JPG, PNG, or WebP. Maximum file size: 700 KB.</p>
+            <img id="adminImagePreview" class="hidden mt-2 h-24 w-24 rounded-xl border border-gray-200 dark:border-gray-700 object-cover" alt="Selected product preview">
+          </div>
           <select id="adminProductCategory" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm"></select>
           <input id="adminProductBadge" placeholder="Badge e.g. New (optional)" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm">
           <textarea id="adminProductDescription" required rows="3" placeholder="Product description" class="sm:col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm"></textarea>
@@ -578,6 +583,8 @@
     let cart = JSON.parse(localStorage.getItem('nascore_cart')) || [];
     let selectedSize = 'M';
     let orderHistory = JSON.parse(localStorage.getItem('nascore_orders')) || [];
+    let pendingAdminImage = '';
+    let isAdminLoggedIn = false;
 
     document.addEventListener('DOMContentLoaded', () => {
       products = products.map(product => ({ ...product, inStock: product.inStock !== false }));
@@ -586,7 +593,6 @@
       renderProducts();
       updateCartUI();
       openProductFromUrl();
-      if (sessionStorage.getItem('nascore_admin_logged_in') === 'true') showAdminDashboard();
 
       // System Preference Change Listener
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
@@ -652,7 +658,7 @@
       const container = document.getElementById('adminContainer');
       modal.classList.remove('opacity-0', 'pointer-events-none');
       container.classList.remove('scale-95');
-      if (sessionStorage.getItem('nascore_admin_logged_in') === 'true') showAdminDashboard();
+      if (isAdminLoggedIn) showAdminDashboard();
       else showAdminLogin();
     }
 
@@ -686,17 +692,23 @@
       }
       error.classList.add('hidden');
       document.getElementById('adminPassword').value = '';
-      sessionStorage.setItem('nascore_admin_logged_in', 'true');
+      isAdminLoggedIn = true;
       showAdminDashboard();
     }
 
     function adminLogout() {
-      sessionStorage.removeItem('nascore_admin_logged_in');
+      isAdminLoggedIn = false;
       showAdminLogin();
     }
 
     function persistProducts() {
-      localStorage.setItem('nascore_products', JSON.stringify(products));
+      try {
+        localStorage.setItem('nascore_products', JSON.stringify(products));
+        return true;
+      } catch (error) {
+        alert('Browser storage is full. Use smaller images or remove unused products, then try again.');
+        return false;
+      }
     }
 
     function renderAdminProductList() {
@@ -715,6 +727,9 @@
       const form = document.getElementById('productForm');
       if (!form) return;
       form.reset();
+      pendingAdminImage = '';
+      document.getElementById('adminImagePreview').src = '';
+      document.getElementById('adminImagePreview').classList.add('hidden');
       document.getElementById('editingProductId').value = '';
       document.getElementById('adminProductCategory').innerHTML = categories.filter(c => c !== 'All').map(c => `<option value="${c}">${c}</option>`).join('');
       document.getElementById('productSaveButton').innerHTML = '<i class="fa-solid fa-plus mr-1"></i>Add Product';
@@ -727,7 +742,11 @@
       document.getElementById('adminProductName').value = product.name;
       document.getElementById('adminProductPrice').value = product.price;
       document.getElementById('adminProductOriginalPrice').value = product.originalPrice || '';
-      document.getElementById('adminProductImage').value = product.image;
+      pendingAdminImage = '';
+      document.getElementById('adminProductImage').value = '';
+      const preview = document.getElementById('adminImagePreview');
+      preview.src = product.image;
+      preview.classList.remove('hidden');
       document.getElementById('adminProductDescription').value = product.description;
       document.getElementById('adminProductBadge').value = product.badge || '';
       document.getElementById('adminProductInStock').checked = product.inStock !== false;
@@ -738,22 +757,54 @@
       document.getElementById('productForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    function readAdminImage(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        alert('Please select a JPG, PNG, or WebP image.');
+        input.value = '';
+        return;
+      }
+      if (file.size > 700 * 1024) {
+        alert('Please choose an image smaller than 700 KB. Compress the image first and try again.');
+        input.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = event => {
+        pendingAdminImage = event.target.result;
+        const preview = document.getElementById('adminImagePreview');
+        preview.src = pendingAdminImage;
+        preview.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
     function saveAdminProduct() {
       const id = Number(document.getElementById('editingProductId').value);
       const name = document.getElementById('adminProductName').value.trim();
       const price = Number(document.getElementById('adminProductPrice').value);
       const originalPriceInput = document.getElementById('adminProductOriginalPrice').value;
       const originalPrice = originalPriceInput === '' ? null : Number(originalPriceInput);
-      const image = document.getElementById('adminProductImage').value.trim();
+      const existingProduct = id ? products.find(item => item.id === id) : null;
+      const image = pendingAdminImage || (existingProduct ? existingProduct.image : '');
       const category = document.getElementById('adminProductCategory').value;
       const badge = document.getElementById('adminProductBadge').value.trim();
       const description = document.getElementById('adminProductDescription').value.trim();
       const inStock = document.getElementById('adminProductInStock').checked;
-      if (!name || !image || !description || !Number.isFinite(price) || price < 0 || (originalPrice !== null && (!Number.isFinite(originalPrice) || originalPrice < 0))) return;
+      if (!image) {
+        alert('Please upload a product image.');
+        return;
+      }
+      if (!name || !description || !Number.isFinite(price) || price < 0 || (originalPrice !== null && (!Number.isFinite(originalPrice) || originalPrice < 0))) return;
       const product = { id: id || Date.now(), name, price, originalPrice, image, category, badge, description, inStock };
+      const previousProducts = products;
       if (id) products = products.map(item => item.id === id ? { ...item, ...product } : item);
       else products.unshift(product);
-      persistProducts();
+      if (!persistProducts()) {
+        products = previousProducts;
+        return;
+      }
       renderProducts();
       renderAdminProductList();
       resetProductForm();
