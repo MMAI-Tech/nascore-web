@@ -3,14 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="google-site-verification" content="javo2P0pOPkavO6Izn1YivefbnGyRJkCyw4OULImFMY" />
-<!-- Standard Meta Tags -->
-  <meta name="description" content="Shop the best traditional, western, and traditional clothing at NAScore. Quality apparel at great prices.">
-  <meta name="keywords" content="NAScore, NAScore, online store, fashion, kurta, shirts">
-  <meta name="author" content="NAScore">
-
-  <!-- Search Engine Crawling -->
-  <meta name="robots" content="index, follow">
   <title>NAScore | Premium Fashion & Lifestyle</title>
   
   <!-- Favicon -->
@@ -584,47 +576,25 @@
     }
 
     let products = [];
+
+    // Reviews Supabase ke 'reviews' table se aate hain, product_id ke hisaab se group ho kar
+    async function loadReviews() {
+      const { data, error } = await supabaseClient.from('reviews').select('*').order('created_at', { ascending: false });
+      reviewsByProduct = {};
+      if (error) {
+        console.error('Reviews load error:', error.message);
+        return;
+      }
+      (data || []).forEach(row => {
+        if (!reviewsByProduct[row.product_id]) reviewsByProduct[row.product_id] = [];
+        reviewsByProduct[row.product_id].push({ name: row.name, rating: row.rating, comment: row.comment });
+      });
+    }
+
     const WHATSAPP_NUMBER = "923211103402";
     const categories = ["All", "Traditional", "Western", "Womens", "Footwear", "Accessories"];
-    const productReviews = {
-      1: [
-        { name: 'Ayesha', rating: 5, comment: 'Very elegant and comfortable.' },
-        { name: 'Haris', rating: 4, comment: 'Great fabric quality and finish.' }
-      ],
-      2: [
-        { name: 'Zain', rating: 4, comment: 'Perfect fit and premium look.' }
-      ],
-      3: [
-        { name: 'Nadia', rating: 5, comment: 'Stylish and durable jacket.' }
-      ],
-      4: [
-        { name: 'Sara', rating: 5, comment: 'Beautiful design and soft fabric.' }
-      ],
-      5: [
-        { name: 'Ali', rating: 4, comment: 'Very cozy and easy to wear.' }
-      ],
-      6: [
-        { name: 'Imran', rating: 5, comment: 'Premium leather and comfortable soles.' }
-      ],
-      7: [
-        { name: 'Mina', rating: 4, comment: 'Clean design and good finishing.' }
-      ],
-      8: [
-        { name: 'Rabia', rating: 5, comment: 'Excellent embroidery and fit.' }
-      ],
-      9: [
-        { name: 'Omer', rating: 4, comment: 'Looks great and feels light.' }
-      ],
-      10: [
-        { name: 'Faisal', rating: 4, comment: 'Neat wallet with good storage space.' }
-      ],
-      11: [
-        { name: 'Bilal', rating: 5, comment: 'Classic look and strong stitching.' }
-      ],
-      12: [
-        { name: 'Khan', rating: 4, comment: 'Great shades for daily use.' }
-      ]
-    };
+    // Reviews ab yahan hardcode nahi hain — Supabase ke 'reviews' table se load hote hain (loadReviews function)
+    let reviewsByProduct = {};
     let activeCategory = "All";
     let cart = JSON.parse(localStorage.getItem('NAScore_cart')) || [];
     let selectedSize = 'M';
@@ -636,7 +606,7 @@
       initThemeUI();
       renderCategoryTabs();
       updateCartUI();
-      await loadProductsFromSupabase();
+      await Promise.all([loadProductsFromSupabase(), loadReviews()]);
       openProductFromUrl();
 
       // System Preference Change Listener
@@ -863,7 +833,7 @@
       if (!product || !window.confirm(`Delete “${product.name}”? This cannot be undone.`)) return;
       products = products.filter(item => item.id !== productId);
       cart = cart.filter(item => item.id !== productId);
-      delete productReviews[productId];
+      delete reviewsByProduct[productId];
       persistProducts();
       updateCartUI();
       renderProducts();
@@ -1015,14 +985,14 @@
     }
 
     function getAverageRating(productId) {
-      const reviews = productReviews[productId] || [];
+      const reviews = reviewsByProduct[productId] || [];
       if (!reviews.length) return 0;
       const total = reviews.reduce((acc, review) => acc + review.rating, 0);
       return (total / reviews.length).toFixed(1);
     }
 
     function getReviewSummary(productId) {
-      const reviews = productReviews[productId] || [];
+      const reviews = reviewsByProduct[productId] || [];
       const average = getAverageRating(productId);
       return {
         average: Number(average),
@@ -1035,7 +1005,7 @@
     }
 
     function renderReviews(productId) {
-      const reviews = productReviews[productId] || [];
+      const reviews = reviewsByProduct[productId] || [];
       const reviewSummary = getReviewSummary(productId);
       const reviewList = document.getElementById('reviewList');
       if (!reviewList) return;
@@ -1084,7 +1054,7 @@
       }
     }
 
-    function submitReview(productId) {
+    async function submitReview(productId) {
       const name = document.getElementById('reviewName').value.trim();
       const comment = document.getElementById('reviewComment').value.trim();
       const rating = Number(document.getElementById('reviewRating').value);
@@ -1099,11 +1069,14 @@
         return;
       }
 
-      if (!productReviews[productId]) {
-        productReviews[productId] = [];
+      const { error } = await supabaseClient.from('reviews').insert({ product_id: productId, name, rating, comment });
+      if (error) {
+        alert('Review save nahi ho saki: ' + error.message);
+        return;
       }
 
-      productReviews[productId].push({ name, rating, comment });
+      if (!reviewsByProduct[productId]) reviewsByProduct[productId] = [];
+      reviewsByProduct[productId].unshift({ name, rating, comment });
       document.getElementById('reviewForm').reset();
       renderReviews(productId);
       alert('Thank you for your review!');
