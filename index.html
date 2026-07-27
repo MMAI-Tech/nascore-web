@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NASCore | Premium Fashion & Lifestyle</title>
+  <title>NAScore | Premium Fashion & Lifestyle</title>
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="images/icon.png">
@@ -86,7 +86,7 @@
         <img src="images/icon.png" alt="NAScore logo" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl object-cover shadow-md shadow-brand-500/20">
         <div class="flex flex-col">
           <span class="text-lg sm:text-xl font-black tracking-tight bg-gradient-to-r from-brand-900 via-brand-700 to-indigo-600 dark:from-brand-400 dark:to-indigo-300 bg-clip-text text-transparent">
-            NASCore
+            NAScore
           </span>
           <span class="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-400 dark:text-gray-500 font-bold -mt-1 hidden xs:block">FASHION & STYLE</span>
         </div>
@@ -178,7 +178,7 @@
             <a href="#products" class="px-6 sm:px-8 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-500/30 transition">
               Shop Collection <i class="fa-solid fa-arrow-right ml-1.5"></i>
             </a>
-            <a href="https://wa.me/923211103402?text=Hi!%20I%20want%20to%20know%20more%20about%20NASCore" target="_blank" class="px-6 sm:px-8 py-3 rounded-xl bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold text-xs sm:text-sm border border-gray-200 dark:border-gray-700 shadow-xs transition">
+            <a href="https://wa.me/923211103402?text=Hi!%20I%20want%20to%20know%20more%20about%20NAScore" target="_blank" class="px-6 sm:px-8 py-3 rounded-xl bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold text-xs sm:text-sm border border-gray-200 dark:border-gray-700 shadow-xs transition">
               <i class="fa-brands fa-whatsapp text-emerald-500 text-base mr-1.5"></i> WhatsApp
             </a>
           </div>
@@ -368,7 +368,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6 border-b border-gray-800">
         <div>
-          <h3 class="text-white font-extrabold text-base mb-1.5">NASCore</h3>
+          <h3 class="text-white font-extrabold text-base mb-1.5">NAScore</h3>
           <p class="text-gray-400 text-[11px] leading-relaxed">
             Your destination for modern, trendy, and authentic clothing. Fast shipping across Pakistan with WhatsApp ordering.
           </p>
@@ -388,7 +388,7 @@
 
       <!-- TEAM CREDITS -->
       <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-gray-400">
-        <div>&copy; 2026 <strong class="text-white">NASCore</strong></div>
+        <div>&copy; 2026 <strong class="text-white">NAScore</strong></div>
         <div class="bg-gray-800/80 px-3 py-1.5 rounded-full border border-gray-700/60 text-[10px] sm:text-[11px]">
           <i class="fa-solid fa-code text-brand-500 mr-1"></i> Developed by <strong class="text-white">Muhammad Arslan</strong>, <strong class="text-white">Sheraz Ali</strong> & <strong class="text-white">Nasir Kamal</strong>
         </div>
@@ -536,9 +536,9 @@
 
     // Product catalogue is persisted in this browser so admin edits survive refreshes.
     // A static site cannot protect credentials: use a backend before publishing a real admin account.
-    let products = JSON.parse(localStorage.getItem('nascore_products') || 'null') || defaultProducts;
+    let products = JSON.parse(localStorage.getItem('NAScore_products') || 'null') || defaultProducts;
     const ADMIN_USERNAME = 'admin';
-    const ADMIN_PASSWORD = 'nascore2026';
+    const ADMIN_PASSWORD = 'NAScore2026';
     const WHATSAPP_NUMBER = "923211103402";
     const categories = ["All", "Traditional", "Western", "Womens", "Footwear", "Accessories"];
     const productReviews = {
@@ -581,9 +581,9 @@
       ]
     };
     let activeCategory = "All";
-    let cart = JSON.parse(localStorage.getItem('nascore_cart')) || [];
+    let cart = JSON.parse(localStorage.getItem('NAScore_cart')) || [];
     let selectedSize = 'M';
-    let orderHistory = JSON.parse(localStorage.getItem('nascore_orders')) || [];
+    let orderHistory = JSON.parse(localStorage.getItem('NAScore_orders')) || [];
     let pendingAdminImage = '';
     let isAdminLoggedIn = false;
 
@@ -712,7 +712,7 @@
 
     function persistProducts() {
       try {
-        localStorage.setItem('nascore_products', JSON.stringify(products));
+        localStorage.setItem('NAScore_products', JSON.stringify(products));
         return true;
       } catch (error) {
         alert('Browser storage is full. Use smaller images or remove unused products, then try again.');
@@ -1178,7 +1178,7 @@
         try {
           await navigator.share({
             title: p.name,
-            text: `Check this product on NASCore: ${p.name}`,
+            text: `Check this product on NAScore: ${p.name}`,
             url: shareUrl.toString()
           });
         } catch (error) {
@@ -1249,7 +1249,7 @@
     }
 
     function updateCartUI() {
-      localStorage.setItem('nascore_cart', JSON.stringify(cart));
+      localStorage.setItem('NAScore_cart', JSON.stringify(cart));
       
       const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
       document.getElementById('cartCount').innerText = totalItems;
@@ -1318,7 +1318,7 @@
       };
 
       orderHistory.push(order);
-      localStorage.setItem('nascore_orders', JSON.stringify(orderHistory));
+      localStorage.setItem('NAScore_orders', JSON.stringify(orderHistory));
     }
 
     function checkoutWhatsApp() {
@@ -1328,7 +1328,7 @@
       }
 
       const notes = document.getElementById('orderNotes').value.trim();
-      let text = `*ORDER CONFIRMATION - NASCore*%0A%0A`;
+      let text = `*ORDER CONFIRMATION - NAScore*%0A%0A`;
       text += `Hello! I would like to confirm my order.%0A`;
       text += `---------------------------------%0A`;
 
@@ -1352,7 +1352,7 @@
       saveOrderToHistory(cart, notes);
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
       cart = [];
-      localStorage.setItem('nascore_cart', JSON.stringify(cart));
+      localStorage.setItem('NAScore_cart', JSON.stringify(cart));
       updateCartUI();
       toggleCart();
     }
@@ -1365,7 +1365,7 @@
         return;
       }
 
-      let text = `*DIRECT PRODUCT ORDER - NASCore*%0A%0A`;
+      let text = `*DIRECT PRODUCT ORDER - NAScore*%0A%0A`;
       text += `I want to place an order for:%0A`;
       text += `*Product:* ${p.name}%0A`;
       text += `*Price:* Rs. ${p.price.toLocaleString()}%0A`;

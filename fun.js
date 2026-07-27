@@ -172,7 +172,7 @@ function checkoutWhatsApp() {
     return;
   }
 
-  let textMessage = `*New Order from NASCore!*%0A%0A`;
+  let textMessage = `*New Order from NAScore!*%0A%0A`;
   let total = 0;
 
   cart.forEach((item, index) => {
