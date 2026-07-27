@@ -87,7 +87,7 @@ function editProduct(id) {
   resetForm();
   byId('productId').value = product.id;
   byId('productName').value = product.name;
-  byId('productPrice').value = product.price;
+  byId('productPrice').value = product.price;he
   byId('productOriginalPrice').value = product.originalPrice || '';
   byId('productCategory').value = product.category;
   byId('productBadge').value = product.badge || '';
