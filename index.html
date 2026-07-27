@@ -536,7 +536,7 @@
 
     // Product catalogue is persisted in this browser so admin edits survive refreshes.
     // A static site cannot protect credentials: use a backend before publishing a real admin account.
-    let products = JSON.parse(localStorage.getItem('NAScore_products') || 'null') || defaultProducts;
+    let products = JSON.parse(localStorage.getItem('NAScore_products') || localStorage.getItem('nascore_products') || 'null') || defaultProducts;
     const ADMIN_USERNAME = 'admin';
     const ADMIN_PASSWORD = 'NAScore2026';
     const WHATSAPP_NUMBER = "923211103402";
@@ -589,6 +589,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       products = products.map(product => ({ ...product, inStock: product.inStock !== false }));
+      if (!localStorage.getItem('NAScore_products')) persistProducts();
       initThemeUI();
       renderCategoryTabs();
       renderProducts();
@@ -655,12 +656,7 @@
 
     // Admin panel (front-end demo). Customers never need to sign in.
     function openAdmin() {
-      const modal = document.getElementById('adminModal');
-      const container = document.getElementById('adminContainer');
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      container.classList.remove('scale-95');
-      if (isAdminLoggedIn) showAdminDashboard();
-      else showAdminLogin();
+      window.location.href = 'admin.html';
     }
 
     function closeAdmin() {
