@@ -10,6 +10,9 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Supabase Client CDN -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -534,11 +537,45 @@
       }
     ];
 
-    // Product catalogue is persisted in this browser so admin edits survive refreshes.
-    // A static site cannot protect credentials: use a backend before publishing a real admin account.
-    let products = JSON.parse(localStorage.getItem('NAScore_products') || localStorage.getItem('nascore_products') || 'null') || defaultProducts;
-    const ADMIN_USERNAME = 'admin';
-    const ADMIN_PASSWORD = 'NAScore2026';
+    // ============================================================
+    // SUPABASE SETUP — apna Project URL aur anon public key yahan daalein
+    // Supabase Dashboard -> Settings -> API me se milegi
+    // Yehi URL/key admin.js me bhi daalni he (dono files me same honi chahiye)
+    // ============================================================
+    const SUPABASE_URL = 'https://oymcltdgbdukjciywmwk.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_pyuFGgwQABWhyPM1W5fztw_Tn76NRvv';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Supabase ki row (snake_case) ko is page ke format (camelCase) me convert karna
+    function rowToProduct(row) {
+      return {
+        id: row.id,
+        name: row.name,
+        category: row.category,
+        price: Number(row.price),
+        originalPrice: row.original_price !== null && row.original_price !== undefined ? Number(row.original_price) : null,
+        image: row.image_url,
+        badge: row.badge,
+        description: row.description,
+        inStock: row.in_stock,
+        hasSizes: row.has_sizes
+      };
+    }
+
+    // Products ab database se live aate hain — jo bhi admin add/update/delete karega,
+    // wo har device par turant nazar aayega (localStorage tak mehdood nahi rahega)
+    async function loadProductsFromSupabase() {
+      const { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
+      if (error) {
+        console.error('Supabase load error:', error.message);
+        products = defaultProducts; // internet/DB na chale to purana sample data dikha do
+      } else {
+        products = (data || []).map(rowToProduct);
+      }
+      renderProducts();
+    }
+
+    let products = [];
     const WHATSAPP_NUMBER = "923211103402";
     const categories = ["All", "Traditional", "Western", "Womens", "Footwear", "Accessories"];
     const productReviews = {
@@ -587,13 +624,11 @@
     let pendingAdminImage = '';
     let isAdminLoggedIn = false;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      products = products.map(product => ({ ...product, inStock: product.inStock !== false, hasSizes: product.hasSizes !== false }));
-      if (!localStorage.getItem('NAScore_products')) persistProducts();
+    document.addEventListener('DOMContentLoaded', async () => {
       initThemeUI();
       renderCategoryTabs();
-      renderProducts();
       updateCartUI();
+      await loadProductsFromSupabase();
       openProductFromUrl();
 
       // System Preference Change Listener

@@ -1,28 +1,65 @@
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'nascore2026';
-const PRODUCTS_KEY = 'NAScore_products';
-let products = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || localStorage.getItem('nascore_products') || '[]');
-products = products.map(product => ({ ...product, inStock: product.inStock !== false, hasSizes: product.hasSizes !== false }));
-let pendingImage = '';
+// ============================================================
+// SUPABASE SETUP — apna Project URL aur anon public key yahan daalein
+// Supabase Dashboard -> Settings -> API me se milegi
+// ============================================================
+const SUPABASE_URL = 'https://oymcltdgbdukjciywmwk.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_pyuFGgwQABWhyPM1W5fztw_Tn76NRvv';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const PRODUCTS_BUCKET = 'products'; // storage bucket ka naam
+
+let products = [];
+let pendingImageFile = null; // ab base64 nahi, seedha File object rakhte hain (upload ke liye)
 
 const byId = id => document.getElementById(id);
 
-byId('loginForm').addEventListener('submit', event => {
+// -------- DB row (snake_case) ko app ke format (camelCase) me convert karna --------
+function rowToProduct(row) {
+  return {
+    id: row.id,
+    name: row.name,
+    category: row.category,
+    price: Number(row.price),
+    originalPrice: row.original_price !== null && row.original_price !== undefined ? Number(row.original_price) : null,
+    image: row.image_url,
+    badge: row.badge,
+    description: row.description,
+    inStock: row.in_stock,
+    hasSizes: row.has_sizes
+  };
+}
+
+// -------- Login (Supabase Auth: email + password) --------
+byId('loginForm').addEventListener('submit', async event => {
   event.preventDefault();
-  const username = byId('loginUsername').value.trim();
+  const email = byId('loginUsername').value.trim();
   const password = byId('loginPassword').value;
   const error = byId('loginError');
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
-    error.textContent = 'Incorrect username or password.';
+
+  error.classList.add('hidden');
+  const { error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  if (authError) {
+    error.textContent = 'Incorrect email or password.';
     error.classList.remove('hidden');
     return;
   }
-  error.classList.add('hidden');
+
   byId('loginPassword').value = '';
+  await enterPortal();
+});
+
+async function enterPortal() {
   byId('loginScreen').classList.add('hidden');
   byId('adminPortal').classList.remove('hidden');
-  renderProducts();
-});
+  await loadProducts();
+}
+
+// Agar admin pehle se logged in he (session yaad rehti he), to seedha portal dikhao
+(async function restoreSession() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) await enterPortal();
+})();
 
 byId('productForm').addEventListener('submit', saveProduct);
 byId('productImage').addEventListener('change', readImage);
@@ -34,7 +71,8 @@ function togglePassword() {
   byId('passwordIcon').className = visible ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
 }
 
-function logout() {
+async function logout() {
+  await supabaseClient.auth.signOut();
   byId('adminPortal').classList.add('hidden');
   byId('loginScreen').classList.remove('hidden');
   byId('loginForm').reset();
@@ -43,6 +81,17 @@ function logout() {
 
 function escapeHtml(value) {
   return String(value || '').replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char]));
+}
+
+// -------- Products load karna (Supabase se, sab logged-in admins ke liye common data) --------
+async function loadProducts() {
+  const { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
+  if (error) {
+    alert('Products load karne me masla aaya: ' + error.message);
+    return;
+  }
+  products = (data || []).map(rowToProduct);
+  renderProducts();
 }
 
 function renderProducts() {
@@ -75,7 +124,7 @@ function showModal() {
 function resetForm() {
   byId('productForm').reset();
   byId('productId').value = '';
-  pendingImage = '';
+  pendingImageFile = null;
   const preview = byId('imagePreview');
   preview.src = '';
   preview.classList.add('hidden');
@@ -87,7 +136,7 @@ function editProduct(id) {
   resetForm();
   byId('productId').value = product.id;
   byId('productName').value = product.name;
-  byId('productPrice').value = product.price;he
+  byId('productPrice').value = product.price;
   byId('productOriginalPrice').value = product.originalPrice || '';
   byId('productCategory').value = product.category;
   byId('productBadge').value = product.badge || '';
@@ -102,6 +151,7 @@ function editProduct(id) {
   showModal();
 }
 
+// -------- Image select hone par sirf preview dikhate hain, actual upload save ke waqt hoga --------
 function readImage(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -110,47 +160,88 @@ function readImage(event) {
     event.target.value = '';
     return;
   }
+  pendingImageFile = file;
   const reader = new FileReader();
   reader.onload = () => {
-    pendingImage = reader.result;
     const preview = byId('imagePreview');
-    preview.src = pendingImage;
+    preview.src = reader.result;
     preview.classList.remove('hidden');
   };
   reader.readAsDataURL(file);
 }
 
-function saveProducts() {
+// -------- Supabase Storage ke 'products' bucket me image upload karna --------
+async function uploadImage(file) {
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await supabaseClient.storage.from(PRODUCTS_BUCKET).upload(path, file);
+  if (error) throw error;
+  const { data } = supabaseClient.storage.from(PRODUCTS_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function saveProduct(event) {
+  event.preventDefault();
+  const saveLabel = byId('saveLabel');
+  const originalLabel = saveLabel.textContent;
+  saveLabel.textContent = 'Saving...';
+
   try {
-    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
-    return true;
-  } catch {
-    alert('Browser storage is full. Use smaller images or remove unused products.');
-    return false;
+    const id = Number(byId('productId').value) || null;
+    const oldProduct = id ? products.find(item => Number(item.id) === id) : null;
+
+    let imageUrl = oldProduct ? oldProduct.image : null;
+    if (pendingImageFile) {
+      imageUrl = await uploadImage(pendingImageFile);
+    }
+    if (!imageUrl) {
+      alert('Please upload a product image.');
+      return;
+    }
+
+    const originalInput = byId('productOriginalPrice').value;
+    const row = {
+      name: byId('productName').value.trim(),
+      price: Number(byId('productPrice').value),
+      original_price: originalInput === '' ? null : Number(originalInput),
+      image_url: imageUrl,
+      category: byId('productCategory').value,
+      badge: byId('productBadge').value.trim(),
+      description: byId('productDescription').value.trim(),
+      in_stock: byId('productInStock').checked,
+      has_sizes: byId('productHasSizes').checked
+    };
+
+    if (!row.name || !row.description || row.price < 0 || (row.original_price !== null && row.original_price < 0)) return;
+
+    let error;
+    if (id) {
+      ({ error } = await supabaseClient.from('products').update(row).eq('id', id));
+    } else {
+      ({ error } = await supabaseClient.from('products').insert(row));
+    }
+
+    if (error) {
+      alert('Product save nahi ho saka: ' + error.message);
+      return;
+    }
+
+    await loadProducts();
+    closeProductForm();
+  } catch (err) {
+    alert('Image upload me masla aaya: ' + err.message);
+  } finally {
+    saveLabel.textContent = originalLabel;
   }
 }
 
-function saveProduct(event) {
-  event.preventDefault();
-  const id = Number(byId('productId').value);
-  const oldProduct = id ? products.find(item => Number(item.id) === id) : null;
-  const image = pendingImage || oldProduct?.image;
-  if (!image) return alert('Please upload a product image.');
-  const originalInput = byId('productOriginalPrice').value;
-  const product = { id: id || Date.now(), name: byId('productName').value.trim(), price: Number(byId('productPrice').value), originalPrice: originalInput === '' ? null : Number(originalInput), image, category: byId('productCategory').value, badge: byId('productBadge').value.trim(), description: byId('productDescription').value.trim(), inStock: byId('productInStock').checked, hasSizes: byId('productHasSizes').checked };
-  if (!product.name || !product.description || product.price < 0 || (product.originalPrice !== null && product.originalPrice < 0)) return;
-  const previous = products;
-  products = id ? products.map(item => Number(item.id) === id ? { ...item, ...product } : item) : [product, ...products];
-  if (!saveProducts()) { products = previous; return; }
-  renderProducts();
-  closeProductForm();
-}
-
-function deleteProduct(id) {
+async function deleteProduct(id) {
   const product = products.find(item => Number(item.id) === id);
-  if (!product || !confirm(`Delete “${product.name}”? This cannot be undone.`)) return;
-  const previous = products;
-  products = products.filter(item => Number(item.id) !== id);
-  if (!saveProducts()) { products = previous; return; }
-  renderProducts();
+  if (!product || !confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
+  const { error } = await supabaseClient.from('products').delete().eq('id', id);
+  if (error) {
+    alert('Delete nahi ho saka: ' + error.message);
+    return;
+  }
+  await loadProducts();
 }
