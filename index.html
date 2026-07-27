@@ -410,140 +410,140 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    const defaultProducts = [
-      {
-        id: 1,
-        name: "Embroidered Cotton Kurta",
-        category: "Traditional",
-        price: 2850,
-        originalPrice: 3500,
-        image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80",
-        badge: "Best Seller",
-        description: "Premium cotton stitched kurta featuring delicate neck embroidery. Lightweight & breathable for formal and casual wear.",
-        inStock: true
-      },
-      {
-        id: 2,
-        name: "Classic Oxford Cotton Shirt",
-        category: "Western",
-        price: 2200,
-        originalPrice: 2800,
-        image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
-        badge: "Hot",
-        description: "100% Cotton button-down Oxford shirt tailored with a modern regular fit.",
-        inStock: true
-      },
-      {
-        id: 3,
-        name: "Slim Fit Vintage Denim Jacket",
-        category: "Western",
-        price: 4200,
-        originalPrice: 5200,
-        image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=600&q=80",
-        badge: "Popular",
-        description: "Rugged washed indigo denim jacket with chest flap pockets and customized branded metal buttons.",
-        inStock: true
-      },
-      {
-        id: 4,
-        name: "Floral Printed Lawn Suit",
-        category: "Womens",
-        price: 3950,
-        originalPrice: 4800,
-        image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80",
-        badge: "New",
-        description: "Exquisite 3-piece unstitched printed lawn suit with chiffon dupatta and dyed trousers.",
-        inStock: true
-      },
-      {
-        id: 5,
-        name: "Urban Fleece Pullover Hoodie",
-        category: "Western",
-        price: 2990,
-        originalPrice: 3600,
-        image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80",
-        badge: "",
-        description: "Ultra-soft fleece hoodie featuring a double-lined hood and kangaroo pouch pocket.",
-        inStock: true
-      },
-      {
-        id: 6,
-        name: "Handcrafted Leather Loafers",
-        category: "Footwear",
-        price: 4800,
-        originalPrice: 6000,
-        image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=600&q=80",
-        badge: "Premium",
-        description: "Genuine leather slip-on loafers with cushioned insoles for comfortable formal or smart-casual wear.",
-        inStock: true
-      },
-      {
-        id: 7,
-        name: "Minimalist Black Watch",
-        category: "Accessories",
-        price: 1950,
-        originalPrice: 2600,
-        image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
-        badge: "Trending",
-        description: "Sleek matte black stainless steel watch with scratch-resistant glass and quartz movement.",
-        inStock: true
-      },
-      {
-        id: 8,
-        name: "Embroidered Kurti Set",
-        category: "Womens",
-        price: 3200,
-        originalPrice: 4000,
-        image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80",
-        badge: "Sale",
-        description: "Ready-to-wear embroidered kurti crafted with fine silk-blend fabric.",
-        inStock: true
-      },
-      {
-        id: 9,
-        name: "Casual Canvas Sneakers",
-        category: "Footwear",
-        price: 2650,
-        originalPrice: 3200,
-        image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=600&q=80",
-        badge: "",
-        description: "Versatile low-top canvas sneakers equipped with anti-slip rubber soles.",
-        inStock: true
-      },
-      {
-        id: 10,
-        name: "Designer Leather Wallet",
-        category: "Accessories",
-        price: 1100,
-        originalPrice: 1500,
-        image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=600&q=80",
-        badge: "",
-        description: "Bi-fold genuine leather wallet with multiple card slots and ID window.",
-        inStock: true
-      },
-      {
-        id: 11,
-        name: "Traditional Waistcoat",
-        category: "Traditional",
-        price: 3750,
-        originalPrice: 4500,
-        image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80",
-        badge: "Hot",
-        description: "Tailored jamawar textured waistcoat designed to pair perfectly with Shalwar Kameez.",
-        inStock: true
-      },
-      {
-        id: 12,
-        name: "Polarized UV Sunglasses",
-        category: "Accessories",
-        price: 1450,
-        originalPrice: 1900,
-        image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80",
-        badge: "",
-        description: "Classic aviator sunglasses featuring glare-reduction lenses and lightweight frame.",
-        inStock: true
-      }
-    ];
+    // const defaultProducts = [
+    //   {
+    //     id: 1,
+    //     name: "Embroidered Cotton Kurta",
+    //     category: "Traditional",
+    //     price: 2850,
+    //     originalPrice: 3500,
+    //     image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80",
+    //     badge: "Best Seller",
+    //     description: "Premium cotton stitched kurta featuring delicate neck embroidery. Lightweight & breathable for formal and casual wear.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "Classic Oxford Cotton Shirt",
+    //     category: "Western",
+    //     price: 2200,
+    //     originalPrice: 2800,
+    //     image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+    //     badge: "Hot",
+    //     description: "100% Cotton button-down Oxford shirt tailored with a modern regular fit.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 3,
+    //     name: "Slim Fit Vintage Denim Jacket",
+    //     category: "Western",
+    //     price: 4200,
+    //     originalPrice: 5200,
+    //     image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=600&q=80",
+    //     badge: "Popular",
+    //     description: "Rugged washed indigo denim jacket with chest flap pockets and customized branded metal buttons.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 4,
+    //     name: "Floral Printed Lawn Suit",
+    //     category: "Womens",
+    //     price: 3950,
+    //     originalPrice: 4800,
+    //     image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80",
+    //     badge: "New",
+    //     description: "Exquisite 3-piece unstitched printed lawn suit with chiffon dupatta and dyed trousers.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 5,
+    //     name: "Urban Fleece Pullover Hoodie",
+    //     category: "Western",
+    //     price: 2990,
+    //     originalPrice: 3600,
+    //     image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80",
+    //     badge: "",
+    //     description: "Ultra-soft fleece hoodie featuring a double-lined hood and kangaroo pouch pocket.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 6,
+    //     name: "Handcrafted Leather Loafers",
+    //     category: "Footwear",
+    //     price: 4800,
+    //     originalPrice: 6000,
+    //     image: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=600&q=80",
+    //     badge: "Premium",
+    //     description: "Genuine leather slip-on loafers with cushioned insoles for comfortable formal or smart-casual wear.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 7,
+    //     name: "Minimalist Black Watch",
+    //     category: "Accessories",
+    //     price: 1950,
+    //     originalPrice: 2600,
+    //     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+    //     badge: "Trending",
+    //     description: "Sleek matte black stainless steel watch with scratch-resistant glass and quartz movement.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 8,
+    //     name: "Embroidered Kurti Set",
+    //     category: "Womens",
+    //     price: 3200,
+    //     originalPrice: 4000,
+    //     image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80",
+    //     badge: "Sale",
+    //     description: "Ready-to-wear embroidered kurti crafted with fine silk-blend fabric.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 9,
+    //     name: "Casual Canvas Sneakers",
+    //     category: "Footwear",
+    //     price: 2650,
+    //     originalPrice: 3200,
+    //     image: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=600&q=80",
+    //     badge: "",
+    //     description: "Versatile low-top canvas sneakers equipped with anti-slip rubber soles.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 10,
+    //     name: "Designer Leather Wallet",
+    //     category: "Accessories",
+    //     price: 1100,
+    //     originalPrice: 1500,
+    //     image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=600&q=80",
+    //     badge: "",
+    //     description: "Bi-fold genuine leather wallet with multiple card slots and ID window.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 11,
+    //     name: "Traditional Waistcoat",
+    //     category: "Traditional",
+    //     price: 3750,
+    //     originalPrice: 4500,
+    //     image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80",
+    //     badge: "Hot",
+    //     description: "Tailored jamawar textured waistcoat designed to pair perfectly with Shalwar Kameez.",
+    //     inStock: true
+    //   },
+    //   {
+    //     id: 12,
+    //     name: "Polarized UV Sunglasses",
+    //     category: "Accessories",
+    //     price: 1450,
+    //     originalPrice: 1900,
+    //     image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80",
+    //     badge: "",
+    //     description: "Classic aviator sunglasses featuring glare-reduction lenses and lightweight frame.",
+    //     inStock: true
+    //   }
+    // ];
 
     // ============================================================
     // SUPABASE SETUP — apna Project URL aur anon public key yahan daalein
