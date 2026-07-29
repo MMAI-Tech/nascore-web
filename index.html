@@ -178,10 +178,22 @@
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-950/80 text-brand-700 dark:text-brand-300 font-bold text-[11px] sm:text-xs uppercase tracking-wider">
             <i class="fa-solid fa-sparkles"></i> New Season Arrivals 2026
           </span>
-          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white leading-tight">
+          <!-- <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white leading-tight">
             Discover Your <br class="hidden sm:inline">
             <span class="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 dark:from-brand-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">Perfect Look Today</span>
-          </h1>
+          </h1> -->
+         <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-tight text-white">
+Discover Your
+<br>
+
+<span id="heroText"
+class="inline-block bg-gradient-to-r from-violet-400 via-fuchsia-300 to-white bg-clip-text text-transparent">
+
+Luxury Fashion For You
+
+</span>
+
+</h1>
           <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Explore premium trends in traditional & Western fashion. Place orders directly via WhatsApp with zero hassle and fast delivery.
           </p>
@@ -1811,5 +1823,53 @@ r.remove();
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
     }
   </script>
+ <style>
+  #heroText{
+
+display:inline-block;
+
+transition:
+opacity .45s ease,
+transform .45s ease;
+
+}
+
+.change{
+
+opacity:0;
+
+transform:translateY(12px);
+
+}
+ </style>
+<script>
+  const words=[
+"Luxury Fashion For YOU",
+"Premium Collection",
+"Modern Streetwear",
+"Exclusive Designs",
+"Favourite Choices"
+];
+
+const hero=document.getElementById("heroText");
+
+let i=0;
+
+setInterval(()=>{
+
+hero.classList.add("change");
+
+setTimeout(()=>{
+
+i=(i+1)%words.length;
+
+hero.textContent=words[i];
+
+hero.classList.remove("change");
+
+},450);
+
+},3500);
+</script>
 </body>
 </html>
