@@ -64,5 +64,161 @@
   <style>.field{width:100%;border-radius:.75rem;border:1px solid #e5e7eb;background:#fff;padding:.65rem .75rem;font-size:.875rem;outline:none}.field:focus{box-shadow:0 0 0 2px #8b5cf6}@media(prefers-color-scheme:dark){.field{border-color:#374151;background:#1f2937;color:#fff}}</style>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="admin.js"></script>
+  <style>
+#cursorCanvas{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:999999;
+}
+</style>
+
+<canvas id="cursorCanvas"></canvas>
+
+<script>
+
+if(window.matchMedia("(pointer:fine)").matches){
+
+const canvas=document.getElementById("cursorCanvas");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+const particles=[];
+
+class Particle{
+
+constructor(x,y){
+
+this.x=x;
+this.y=y;
+
+this.dx=(Math.random()-0.5)*4;
+this.dy=(Math.random()-0.5)*4;
+
+this.life=60;
+
+this.size=Math.random()*5+2;
+
+this.color=[
+"#ffffff",
+"#00e5ff",
+"#7b61ff",
+"#70ffcf",
+"#8cf6ff"
+][Math.floor(Math.random()*5)];
+
+}
+
+update(){
+
+this.x+=this.dx;
+this.y+=this.dy;
+
+this.dy*=0.98;
+this.dx*=0.98;
+
+this.life--;
+
+}
+
+draw(){
+
+ctx.globalAlpha=this.life/60;
+
+ctx.beginPath();
+ctx.fillStyle=this.color;
+ctx.shadowBlur=20;
+ctx.shadowColor=this.color;
+
+ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+
+ctx.fill();
+
+}
+
+}
+
+window.addEventListener("mousemove",(e)=>{
+
+for(let i=0;i<4;i++)
+particles.push(new Particle(e.clientX,e.clientY));
+
+});
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+for(let i=particles.length-1;i>=0;i--){
+
+particles[i].update();
+particles[i].draw();
+
+if(particles[i].life<=0)
+particles.splice(i,1);
+
+}
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+}
+
+// Mobile Touch Effect
+
+if(window.matchMedia("(pointer:coarse)").matches){
+
+document.addEventListener("touchmove",function(e){
+
+const touch=e.touches[0];
+
+const glow=document.createElement("div");
+
+glow.style.position="fixed";
+glow.style.left=(touch.clientX-15)+"px";
+glow.style.top=(touch.clientY-15)+"px";
+
+glow.style.width="30px";
+glow.style.height="30px";
+
+glow.style.borderRadius="50%";
+
+glow.style.background="radial-gradient(circle,#6cf,#7b61ff00)";
+
+glow.style.pointerEvents="none";
+
+glow.style.zIndex="999999";
+
+glow.style.transition="all .7s ease";
+
+document.body.appendChild(glow);
+
+requestAnimationFrame(()=>{
+
+glow.style.transform="scale(3)";
+glow.style.opacity="0";
+
+});
+
+setTimeout(()=>{
+
+glow.remove();
+
+},700);
+
+},{passive:true});
+
+}
+
+</script>
 </body>
 </html>
