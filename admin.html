@@ -64,7 +64,7 @@
   <style>.field{width:100%;border-radius:.75rem;border:1px solid #e5e7eb;background:#fff;padding:.65rem .75rem;font-size:.875rem;outline:none}.field:focus{box-shadow:0 0 0 2px #8b5cf6}@media(prefers-color-scheme:dark){.field{border-color:#374151;background:#1f2937;color:#fff}}</style>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="admin.js"></script>
-  <style>
+  <!-- <style>
 #cursorCanvas{
     position:fixed;
     inset:0;
@@ -75,9 +75,9 @@
 
 <canvas id="cursorCanvas"></canvas>
 
-<script>
+<script> -->
 
-if(window.matchMedia("(pointer:fine)").matches){
+<!-- if(window.matchMedia("(pointer:fine)").matches){
 
 const canvas=document.getElementById("cursorCanvas");
 const ctx=canvas.getContext("2d");
@@ -219,6 +219,263 @@ glow.remove();
 
 }
 
+</script> -->
+<style>
+
+#magicCursor{
+position:fixed;
+left:0;
+top:0;
+width:18px;
+height:18px;
+border-radius:50%;
+pointer-events:none;
+z-index:999999;
+background:radial-gradient(circle,
+rgba(255,255,255,.95),
+rgba(196,181,253,.9),
+rgba(139,92,246,.35));
+
+backdrop-filter:blur(12px);
+box-shadow:
+0 0 12px rgba(255,255,255,.8),
+0 0 25px rgba(139,92,246,.45);
+
+transform:translate(-50%,-50%);
+transition:
+width .25s,
+height .25s,
+background .25s;
+}
+
+.cursorParticle{
+
+position:fixed;
+
+width:6px;
+height:6px;
+
+pointer-events:none;
+
+border-radius:50%;
+
+background:linear-gradient(
+135deg,
+#fff,
+#d8b4fe,
+#8b5cf6);
+
+box-shadow:
+0 0 10px #fff,
+0 0 20px #8b5cf6;
+
+z-index:999998;
+
+animation:particle .9s linear forwards;
+
+}
+
+@keyframes particle{
+
+0%{
+
+opacity:1;
+transform:translate(0,0) scale(1);
+
+}
+
+100%{
+
+opacity:0;
+
+transform:
+translate(var(--x),var(--y))
+scale(0);
+
+}
+
+}
+
+.hoverCursor{
+
+width:34px!important;
+height:34px!important;
+
+background:
+radial-gradient(circle,
+#fff,
+#8b5cf6);
+
+box-shadow:
+
+0 0 25px white,
+
+0 0 60px #8b5cf6;
+
+}
+
+.touchRipple{
+
+position:fixed;
+
+width:22px;
+height:22px;
+
+border-radius:50%;
+
+pointer-events:none;
+
+background:
+
+radial-gradient(circle,
+rgba(255,255,255,.9),
+rgba(139,92,246,.4),
+transparent);
+
+animation:ripple .7s ease forwards;
+
+z-index:999999;
+
+}
+
+@keyframes ripple{
+
+to{
+
+transform:scale(6);
+
+opacity:0;
+
+}
+
+}
+
+</style>
+<script>
+
+const desktop=window.matchMedia("(pointer:fine)").matches;
+
+if(desktop){
+
+const cursor=document.createElement("div");
+
+cursor.id="magicCursor";
+
+document.body.appendChild(cursor);
+
+let mx=0;
+let my=0;
+
+let cx=0;
+let cy=0;
+
+document.addEventListener("mousemove",e=>{
+
+mx=e.clientX;
+my=e.clientY;
+
+createParticle(mx,my);
+
+});
+
+function animate(){
+
+cx+=(mx-cx)*0.18;
+cy+=(my-cy)*0.18;
+
+cursor.style.left=cx+"px";
+cursor.style.top=cy+"px";
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+function createParticle(x,y){
+
+const p=document.createElement("div");
+
+p.className="cursorParticle";
+
+p.style.left=x+"px";
+
+p.style.top=y+"px";
+
+p.style.setProperty("--x",(Math.random()-0.5)*45+"px");
+
+p.style.setProperty("--y",(Math.random()-0.5)*45+"px");
+
+document.body.appendChild(p);
+
+setTimeout(()=>{
+
+p.remove();
+
+},900);
+
+}
+
+document.querySelectorAll(
+"button,a,.product-card,.rounded-xl,input"
+).forEach(el=>{
+
+el.addEventListener("mouseenter",()=>{
+
+cursor.classList.add("hoverCursor");
+
+});
+
+el.addEventListener("mouseleave",()=>{
+
+cursor.classList.remove("hoverCursor");
+
+});
+
+});
+
+document.addEventListener("click",e=>{
+
+for(let i=0;i<12;i++){
+
+createParticle(
+e.clientX,
+e.clientY
+);
+
+}
+
+});
+
+}
+
+else{
+
+document.addEventListener("touchstart",e=>{
+
+const t=e.touches[0];
+
+const r=document.createElement("div");
+
+r.className="touchRipple";
+
+r.style.left=(t.clientX-11)+"px";
+
+r.style.top=(t.clientY-11)+"px";
+
+document.body.appendChild(r);
+
+setTimeout(()=>{
+
+r.remove();
+
+},700);
+
+},{passive:true});
+
+}
+
 </script>
 </body>
+
 </html>
