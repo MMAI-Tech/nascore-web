@@ -226,8 +226,8 @@ Luxury Fashion For You
         <!-- Hero Image Banner -->
         <div class="relative hidden sm:block">
           <div class="relative mx-auto max-w-md lg:max-w-none">
-            <div class="aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border-2 sm:border-4 border-white dark:border-gray-800">
-              <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=80" alt="Hero Banner" class="w-full h-full object-cover">
+            <div class="aspect-[4/3] rounded-2xl overflow-hidden ">
+              <img src="images/main2.png" alt="Hero Banner" id="heroImage"  class="w-[40em] object-cover">
             </div>
           </div>
         </div>
@@ -1842,9 +1842,87 @@ transform:translateY(12px);
 
 }
  </style>
+ <style>
+  /* HERO IMAGE */
+
+#heroImage{
+
+    position:relative;
+
+    animation:
+
+    floating 7s ease-in-out infinite,
+
+    revealHero 1.2s ease;
+
+    transition:
+
+    transform .35s cubic-bezier(.22,.61,.36,1),
+
+    filter .35s ease;
+
+    will-change:transform;
+
+}
+
+/* Image Floating */
+
+@keyframes floating{
+
+0%{
+
+transform:translateY(0px) scale(1);
+
+}
+
+50%{
+
+transform:translateY(-10px) scale(1.02);
+
+}
+
+100%{
+
+transform:translateY(0px) scale(1);
+
+}
+
+}
+
+/* Page Load */
+
+@keyframes revealHero{
+
+0%{
+
+opacity:0;
+
+transform:
+
+translateY(30px)
+
+scale(.95);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:
+
+translateY(0)
+
+scale(1);
+
+}
+
+}
+
+ </style>
 <script>
   const words=[
-"Luxury Fashion For YOU",
+"Luxury Fashion For You",
 "Premium Collection",
 "Modern Streetwear",
 "Exclusive Designs",
@@ -1870,6 +1948,43 @@ hero.classList.remove("change");
 },450);
 
 },3500);
+</script>
+<script>
+  const heroImage = document.getElementById("heroImage");
+
+if(heroImage && window.innerWidth > 768){
+
+let mouseX = 0;
+let mouseY = 0;
+
+let currentX = 0;
+let currentY = 0;
+
+document.addEventListener("mousemove",(e)=>{
+
+mouseX=(e.clientX-window.innerWidth/2)/60;
+
+mouseY=(e.clientY-window.innerHeight/2)/60;
+
+});
+
+function animateHero(){
+
+currentX+=(mouseX-currentX)*0.08;
+currentY+=(mouseY-currentY)*0.08;
+
+heroImage.style.transform=
+
+`translate(${currentX}px,${currentY}px)
+scale(1.02)`;
+
+requestAnimationFrame(animateHero);
+
+}
+
+animateHero();
+
+}
 </script>
 </body>
 </html>
