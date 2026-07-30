@@ -89,7 +89,18 @@
   </div>
 
   <!-- NAVIGATION BAR -->
-  <header class="sticky top-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-xs transition-colors duration-200">
+  <!-- <header class="sticky top-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-xs transition-colors duration-200"> -->
+    <header class="sticky top-0 z-40
+bg-gradient-to-r
+from-[#A855F7]
+via-[#C084FC]
+to-[#8B5CF6]
+dark:from-[#1e3a8a]/40
+dark:via-[#1d4ed8]/30
+dark:to-[#0f766e]/40
+backdrop-blur-xl
+border-b border-white/10
+shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
       
       <!-- Brand Logo -->
@@ -99,7 +110,7 @@
           <span class="text-lg sm:text-xl font-black tracking-tight bg-gradient-to-r from-brand-900 via-brand-700 to-indigo-600 dark:from-brand-400 dark:to-indigo-300 bg-clip-text text-transparent">
             NAScore
           </span>
-          <span class="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-400 dark:text-gray-500 font-bold -mt-1 hidden xs:block">FASHION & STYLE</span>
+          <span class="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 dark:text-gray-500 font-bold -mt-1 hidden xs:block">FASHION & STYLE</span>
         </div>
       </a>
 
@@ -107,7 +118,7 @@
       <div class="hidden md:flex flex-1 max-w-md relative">
         <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search products, styles..." 
           class="w-full pl-10 pr-4 py-2.5 rounded-full bg-gray-100 dark:bg-gray-800 dark:text-white border border-transparent focus:border-brand-500 focus:bg-white dark:focus:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-brand-500/10 text-sm transition-all">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 dark:text-gray-500 text-sm"></i>
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-500 dark:text-gray-400 dark:text-gray-500 text-sm"></i>
       </div>
 
       <!-- Action Buttons -->
@@ -143,7 +154,7 @@
       <div class="relative w-full">
         <input type="text" id="mobileSearchInput" oninput="handleSearch()" placeholder="Search products..." 
           class="w-full pl-9 pr-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 dark:text-white text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 border border-gray-200/60 dark:border-gray-700">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 dark:text-gray-500 text-xs"></i>
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-500 dark:text-gray-400 dark:text-gray-500 text-xs"></i>
       </div>
     </div>
   </header>
@@ -154,11 +165,11 @@
       <i class="fa-solid fa-store text-base"></i>
       <span>Shop</span>
     </a>
-    <button onclick="document.getElementById('mobileSearchInput').focus()" class="flex flex-col items-center gap-0.5 text-gray-500 dark:text-gray-400 hover:text-brand-600 text-[10px]">
+    <button onclick="document.getElementById('mobileSearchInput').focus()" class="flex flex-col items-center gap-0.5 text-gray-500 dark:text-gray-500 dark:text-gray-400 hover:text-brand-600 text-[10px]">
       <i class="fa-solid fa-magnifying-glass text-base"></i>
       <span>Search</span>
     </button>
-    <button onclick="toggleCart()" class="flex flex-col items-center gap-0.5 text-gray-500 dark:text-gray-400 hover:text-brand-600 text-[10px] relative">
+    <button onclick="toggleCart()" class="flex flex-col items-center gap-0.5 text-gray-500 dark:text-gray-500 dark:text-gray-400 hover:text-brand-600 text-[10px] relative">
       <i class="fa-solid fa-bag-shopping text-base"></i>
       <span>Cart</span>
     </button>
@@ -182,7 +193,7 @@
             Discover Your <br class="hidden sm:inline">
             <span class="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 dark:from-brand-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">Perfect Look Today</span>
           </h1> -->
-         <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-tight text-white">
+         <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-tight text-gray-900 dark:text-white">
 Discover Your
 <br>
 
@@ -194,7 +205,7 @@ Luxury Fashion For You
 </span>
 
 </h1>
-          <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed">
+          <p class="text-gray-600 dark:text-gray-500 dark:text-gray-400 text-xs sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Explore premium trends in traditional & Western fashion. Place orders directly via WhatsApp with zero hassle and fast delivery.
           </p>
           <div class="flex flex-wrap justify-center lg:justify-start gap-3 pt-1">
@@ -210,15 +221,15 @@ Luxury Fashion For You
           <div class="pt-4 sm:pt-6 grid grid-cols-3 gap-2 sm:gap-4 border-t border-gray-200/60 dark:border-gray-800 max-w-md mx-auto lg:mx-0">
             <div>
               <p class="text-base sm:text-xl font-extrabold text-gray-900 dark:text-white">100%</p>
-              <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium">Original Quality</p>
+              <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500 dark:text-gray-400 font-medium">Original Quality</p>
             </div>
             <div>
               <p class="text-base sm:text-xl font-extrabold text-gray-900 dark:text-white">24/7</p>
-              <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium">WhatsApp Support</p>
+              <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500 dark:text-gray-400 font-medium">WhatsApp Support</p>
             </div>
             <div>
               <p class="text-base sm:text-xl font-extrabold text-gray-900 dark:text-white">Fast</p>
-              <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium">Cash On Delivery</p>
+              <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500 dark:text-gray-400 font-medium">Cash On Delivery</p>
             </div>
           </div>
         </div>
@@ -243,7 +254,7 @@ Luxury Fashion For You
     <div class="flex flex-col gap-4 mb-6 border-b border-gray-200/80 dark:border-gray-800 pb-4">
       <div>
         <h2 class="text-xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Our Premium Products</h2>
-        <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mt-0.5">Select items to view specifications or order instantly</p>
+        <p class="text-gray-500 dark:text-gray-500 dark:text-gray-400 text-xs sm:text-sm mt-0.5">Select items to view specifications or order instantly</p>
       </div>
 
       <!-- Categories Scrollable Tabs -->
@@ -259,11 +270,11 @@ Luxury Fashion For You
 
     <!-- Empty State -->
     <div id="noProducts" class="hidden text-center py-12">
-      <div class="w-12 h-12 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
+      <div class="w-12 h-12 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 dark:text-gray-500 rounded-full flex items-center justify-center mx-auto text-lg mb-3">
         <i class="fa-solid fa-magnifying-glass"></i>
       </div>
       <h3 class="text-sm font-bold text-gray-800 dark:text-gray-200">No matching products found</h3>
-      <p class="text-gray-500 dark:text-gray-400 text-xs mt-1">Try another category or search term.</p>
+      <p class="text-gray-500 dark:text-gray-500 dark:text-gray-400 text-xs mt-1">Try another category or search term.</p>
     </div>
   </main>
 
@@ -286,7 +297,7 @@ Luxury Fashion For You
   <div id="adminModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200 p-4">
     <div id="adminContainer" class="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white dark:bg-gray-900 shadow-2xl scale-95 transition-transform duration-200">
       <div class="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur px-5 py-4">
-        <div><h2 class="font-black text-gray-900 dark:text-white">Admin Panel</h2><p class="text-xs text-gray-500 dark:text-gray-400">Manage your store products</p></div>
+        <div><h2 class="font-black text-gray-900 dark:text-white">Admin Panel</h2><p class="text-xs text-gray-500 dark:text-gray-500 dark:text-gray-400">Manage your store products</p></div>
         <button onclick="closeAdmin()" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="adminLoginView" class="max-w-sm mx-auto p-6 sm:p-8">
@@ -295,7 +306,7 @@ Luxury Fashion For You
           <input id="adminUsername" autocomplete="username" required placeholder="Username" class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
           <div class="relative">
             <input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Password" class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white px-3 py-3 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-            <button type="button" onclick="toggleAdminPasswordVisibility()" class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2 text-gray-400 hover:text-brand-600 dark:hover:text-brand-400" aria-label="Show or hide password"><i id="adminPasswordIcon" class="fa-solid fa-eye"></i></button>
+            <button type="button" onclick="toggleAdminPasswordVisibility()" class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2 text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400" aria-label="Show or hide password"><i id="adminPasswordIcon" class="fa-solid fa-eye"></i></button>
           </div>
           <p id="adminLoginError" class="hidden text-xs font-semibold text-red-600"></p>
           <button class="w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-sm font-extrabold text-white">Sign in</button>
@@ -303,7 +314,7 @@ Luxury Fashion For You
       </div>
       <div id="adminDashboard" class="hidden p-4 sm:p-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
-          <div><h3 class="font-black text-gray-900 dark:text-white">Product Manager</h3><p class="text-xs text-gray-500 dark:text-gray-400">Changes are saved on this browser immediately.</p></div>
+          <div><h3 class="font-black text-gray-900 dark:text-white">Product Manager</h3><p class="text-xs text-gray-500 dark:text-gray-500 dark:text-gray-400">Changes are saved on this browser immediately.</p></div>
           <button onclick="adminLogout()" class="rounded-xl border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"><i class="fa-solid fa-right-from-bracket mr-1"></i>Logout</button>
         </div>
         <form id="productForm" onsubmit="event.preventDefault(); saveAdminProduct();" class="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700 p-4 mb-6">
@@ -315,7 +326,7 @@ Luxury Fashion For You
           <div class="sm:col-span-2">
             <label for="adminProductImage" class="mb-1.5 block text-xs font-bold text-gray-700 dark:text-gray-200">Product image</label>
             <input id="adminProductImage" onchange="readAdminImage(this)" accept="image/png,image/jpeg,image/webp" type="file" class="block w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs text-gray-600 dark:text-gray-300 file:mr-3 file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-xs file:font-bold file:text-brand-700 hover:file:bg-brand-100 dark:file:bg-gray-800 dark:file:text-brand-300">
-            <p class="mt-1 text-[11px] text-gray-500 dark:text-gray-400">JPG, PNG, or WebP. Maximum file size: 700 KB.</p>
+            <p class="mt-1 text-[11px] text-gray-500 dark:text-gray-500 dark:text-gray-400">JPG, PNG, or WebP. Maximum file size: 700 KB.</p>
             <img id="adminImagePreview" class="hidden mt-2 h-24 w-24 rounded-xl border border-gray-200 dark:border-gray-700 object-cover" alt="Selected product preview">
           </div>
           <select id="adminProductCategory" class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white px-3 py-2.5 text-sm"></select>
@@ -364,7 +375,7 @@ Luxury Fashion For You
       <!-- Drawer Footer -->
       <div class="p-4 sm:p-5 border-t border-gray-100 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-900/80 space-y-3">
         <div class="space-y-1 text-xs sm:text-sm">
-          <div class="flex justify-between text-gray-500 dark:text-gray-400">
+          <div class="flex justify-between text-gray-500 dark:text-gray-500 dark:text-gray-400">
             <span>Subtotal</span>
             <span id="cartSubtotal" class="font-semibold text-gray-800 dark:text-gray-200">Rs. 0</span>
           </div>
@@ -387,12 +398,31 @@ Luxury Fashion For You
   </div>
 
   <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 text-xs py-8 border-t border-gray-800 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6 border-b border-gray-800">
+  <!-- <footer class="bg-gray-900 text-gray-500 dark:text-gray-400 text-xs py-8 border-t border-gray-800 mt-auto"> -->
+  <footer class="relative overflow-hidden
+bg-gradient-to-br
+from-[#0B1023]
+via-[#161B3A]
+to-[#231942]
+text-gray-300
+border-t border-violet-500/20
+shadow-[0_-15px_60px_rgba(139,92,246,.18)]
+">
+    <div class="absolute top-0 left-0 w-full h-px
+bg-gradient-to-r
+from-transparent
+via-violet-400
+to-transparent
+opacity-80">
+</div>
+    <!-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> -->
+      <br>
+      <div class="max-w-screen-2xl mx-auto px-6 lg:px-12">
+      <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6 border-b border-gray-800"> -->
+        <div class="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr_1fr] gap-x-16 gap-y-8 pb-8 border-b border-white/10">
         <div>
           <h3 class="text-white font-extrabold text-base mb-1.5">NAScore</h3>
-          <p class="text-gray-400 text-[11px] leading-relaxed">
+          <p class="text-gray-500 dark:text-gray-400 text-[11px] leading-relaxed">
             Your destination for modern, trendy, and authentic clothing. Fast shipping across Pakistan with WhatsApp ordering.
           </p>
         </div>
@@ -405,15 +435,22 @@ Luxury Fashion For You
         </div>
         <div>
           <h4 class="text-white font-bold mb-2">Payment</h4>
-          <p class="text-[11px] text-gray-400">Cash on Delivery (COD) available nationwide.</p>
+          <p class="text-[11px] text-gray-500 dark:text-gray-400">Cash on Delivery (COD) available nationwide.</p>
         </div>
       </div>
 
       <!-- TEAM CREDITS -->
-      <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-gray-400">
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-gray-500 dark:text-gray-400">
         <div>&copy; 2026 <strong class="text-white">NAScore</strong></div>
-        <div class="bg-gray-800/80 px-3 py-1.5 rounded-full border border-gray-700/60 text-[10px] sm:text-[11px]">
+        <div class="bg-white/5
+backdrop-blur-xl
+border border-white/10
+shadow-lg
+hover:border-violet-400/40
+hover:bg-white/10
+transition-all duration-300 px-3 py-1.5 rounded-full  text-[10px] sm:text-[11px]">
           <i class="fa-solid fa-code text-brand-500 mr-1"></i> Developed by <strong class="text-white">Muhammad Arslan</strong>, <strong class="text-white">Sheraz Ali</strong> & <strong class="text-white">Nasir Kamal</strong>
+          
         </div>
       </div>
     </div>
@@ -1166,7 +1203,7 @@ r.remove();
       list.innerHTML = products.map(product => `
         <div class="flex items-center gap-3 rounded-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 p-2.5">
           <img src="${product.image}" alt="" class="w-12 h-12 rounded-lg object-cover bg-gray-100">
-          <div class="min-w-0 flex-1"><p class="truncate text-sm font-bold text-gray-900 dark:text-white">${product.name}</p><p class="text-xs text-gray-500 dark:text-gray-400">${product.category} · Rs. ${Number(product.price).toLocaleString()} · <span class="${product.inStock === false ? 'text-red-500' : 'text-emerald-600'} font-bold">${product.inStock === false ? 'Out of stock' : 'In stock'}</span></p></div>
+          <div class="min-w-0 flex-1"><p class="truncate text-sm font-bold text-gray-900 dark:text-white">${product.name}</p><p class="text-xs text-gray-500 dark:text-gray-500 dark:text-gray-400">${product.category} · Rs. ${Number(product.price).toLocaleString()} · <span class="${product.inStock === false ? 'text-red-500' : 'text-emerald-600'} font-bold">${product.inStock === false ? 'Out of stock' : 'In stock'}</span></p></div>
           <div class="flex gap-1"><button onclick="editAdminProduct(${product.id})" class="rounded-lg p-2 text-brand-600 hover:bg-brand-50 dark:hover:bg-gray-700" title="Edit"><i class="fa-solid fa-pen"></i></button><button onclick="deleteAdminProduct(${product.id})" class="rounded-lg p-2 text-red-500 hover:bg-red-50 dark:hover:bg-gray-700" title="Delete"><i class="fa-solid fa-trash"></i></button></div>
         </div>
       `).join('') || '<p class="py-6 text-center text-sm text-gray-500">No products yet.</p>';
@@ -1396,7 +1433,7 @@ r.remove();
               <h3 class="font-bold text-gray-900 dark:text-white text-xs sm:text-base line-clamp-1 cursor-pointer hover:text-brand-600 dark:hover:text-brand-400 transition" onclick="openModal(${p.id})">
                 ${p.name}
               </h3>
-              <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2 hidden sm:block">${p.description}</p>
+              <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2 hidden sm:block">${p.description}</p>
             </div>
 
             <div class="mt-2.5 pt-2 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
@@ -1449,7 +1486,7 @@ r.remove();
           </div>
           <p class="text-[11px] text-gray-600 dark:text-gray-300">${review.comment}</p>
         </div>
-      `).join('') : '<p class="text-[11px] text-gray-500 dark:text-gray-400">No reviews yet. Be the first to rate this product.</p>';
+      `).join('') : '<p class="text-[11px] text-gray-500 dark:text-gray-500 dark:text-gray-400">No reviews yet. Be the first to rate this product.</p>';
 
       const reviewSummaryEl = document.getElementById('reviewSummary');
       if (reviewSummaryEl) {
@@ -1458,7 +1495,7 @@ r.remove();
             <span class="text-lg font-black text-gray-900 dark:text-white">${reviewSummary.average.toFixed(1)}</span>
             <div class="text-amber-500 text-sm">${'★'.repeat(Math.round(reviewSummary.average))}${'☆'.repeat(5 - Math.round(reviewSummary.average))}</div>
           </div>
-          <p class="text-[11px] text-gray-500 dark:text-gray-400">${reviewSummary.count} review${reviewSummary.count === 1 ? '' : 's'}</p>
+          <p class="text-[11px] text-gray-500 dark:text-gray-500 dark:text-gray-400">${reviewSummary.count} review${reviewSummary.count === 1 ? '' : 's'}</p>
         `;
       }
 
@@ -1481,7 +1518,7 @@ r.remove();
               <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2 rounded-lg text-xs transition">Submit Review</button>
             </form>
           `
-          : `<p class="text-[11px] text-gray-500 dark:text-gray-400">Only customers who have placed an order can leave a review.</p>`;
+          : `<p class="text-[11px] text-gray-500 dark:text-gray-500 dark:text-gray-400">Only customers who have placed an order can leave a review.</p>`;
       }
     }
 
@@ -1540,7 +1577,7 @@ r.remove();
             
             <div class="flex items-center gap-2 mb-3">
               <span class="text-xl font-black text-brand-700 dark:text-brand-400">Rs. ${p.price.toLocaleString()}</span>
-              ${p.originalPrice ? `<span class="text-xs text-gray-400 dark:text-gray-500 line-through">Rs. ${p.originalPrice.toLocaleString()}</span>` : ''}
+              ${p.originalPrice ? `<span class="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 line-through">Rs. ${p.originalPrice.toLocaleString()}</span>` : ''}
             </div>
 
             <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed mb-4 border-y border-gray-100 dark:border-gray-800 py-2">${p.description}</p>
@@ -1707,7 +1744,7 @@ r.remove();
         cartItemsContainer.innerHTML = `
           <div class="text-center py-10">
             <i class="fa-solid fa-basket-shopping text-3xl text-gray-300 dark:text-gray-600 mb-2"></i>
-            <p class="text-xs font-bold text-gray-600 dark:text-gray-400">Your cart is empty</p>
+            <p class="text-xs font-bold text-gray-600 dark:text-gray-500 dark:text-gray-400">Your cart is empty</p>
           </div>
         `;
       } else {
@@ -1717,7 +1754,7 @@ r.remove();
               <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded-lg border dark:border-gray-700">
               <div>
                 <h4 class="font-bold text-gray-800 dark:text-gray-200 text-xs line-clamp-1">${item.name}</h4>
-                <p class="text-[10px] text-gray-400 dark:text-gray-400">Size: <strong class="text-gray-700 dark:text-gray-300">${item.size}</strong></p>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400">Size: <strong class="text-gray-700 dark:text-gray-300">${item.size}</strong></p>
                 <p class="text-xs font-black text-brand-700 dark:text-brand-400 mt-0.5">Rs. ${(item.price * item.quantity).toLocaleString()}</p>
               </div>
             </div>
@@ -1728,7 +1765,7 @@ r.remove();
                 <span class="font-bold px-1 text-gray-800 dark:text-gray-200">${item.quantity}</span>
                 <button onclick="changeQuantity(${item.id}, '${item.size}', 1)" class="text-gray-500 font-bold px-1">+</button>
               </div>
-              <button onclick="removeFromCart(${item.id}, '${item.size}')" class="text-gray-400 hover:text-red-500 p-1">
+              <button onclick="removeFromCart(${item.id}, '${item.size}')" class="text-gray-500 dark:text-gray-400 hover:text-red-500 p-1">
                 <i class="fa-solid fa-trash-can text-xs"></i>
               </button>
             </div>
@@ -1851,7 +1888,7 @@ transform:translateY(12px);
 
     animation:
 
-    floating 7s ease-in-out infinite,
+    floating 3.2s ease-in-out infinite,
 
     revealHero 1.2s ease;
 
@@ -1877,7 +1914,7 @@ transform:translateY(0px) scale(1);
 
 50%{
 
-transform:translateY(-10px) scale(1.02);
+transform:translateY(-30px) scale(1.02);
 
 }
 
@@ -1986,5 +2023,67 @@ animateHero();
 
 }
 </script>
+
+<style>
+header{
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+}
+footer{
+position:relative;
+overflow:hidden;
+isolation:isolate;
+}
+
+footer::before{
+content:"";
+position:absolute;
+width:420px;
+height:420px;
+top:-220px;
+left:-150px;
+border-radius:50%;
+
+background:
+radial-gradient(circle,
+rgba(139,92,246,.30),
+transparent 70%);
+
+filter:blur(80px);
+z-index:-1;
+}
+
+footer::after{
+content:"";
+position:absolute;
+width:380px;
+height:380px;
+right:-120px;
+bottom:-180px;
+border-radius:50%;
+
+background:
+radial-gradient(circle,
+rgba(99,102,241,.25),
+transparent 70%);
+
+filter:blur(70px);
+z-index:-1;
+}
+
+footer a{
+transition:.35s;
+}
+
+footer a:hover{
+color:white;
+text-shadow:
+0 0 10px rgba(255,255,255,.4),
+0 0 20px rgba(139,92,246,.5);
+}
+
+
+</style>
+
 </body>
 </html>
