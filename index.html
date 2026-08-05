@@ -92,7 +92,7 @@
   <div class="bg-gradient-to-r from-brand-700 via-indigo-600 to-brand-700 text-white text-[11px] sm:text-xs font-semibold py-2 px-3 text-center tracking-wide">
     <span class="inline-flex items-center gap-1.5">
       <i class="fa-solid fa-truck-fast text-yellow-300"></i>
-      <span>Free Delivery Nationwide On Orders Above Rs. 3,000!</span>
+      <span>Free Delivery Nationwide On Every Order!</span>
     </span>
   </div>
 
@@ -1814,22 +1814,14 @@ r.remove();
       }
 
       const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-      const freeShippingLimit = 3000;
       
       document.getElementById('cartSubtotal').innerText = `Rs. ${subtotal.toLocaleString()}`;
       document.getElementById('cartTotal').innerText = `Rs. ${subtotal.toLocaleString()}`;
 
       const shippingBar = document.getElementById('shippingBar');
       const shippingMsg = document.getElementById('shippingMsg');
-      if (subtotal >= freeShippingLimit) {
-        shippingBar.style.width = '100%';
-        shippingMsg.innerText = "🎉 You unlocked FREE Delivery!";
-      } else {
-        const pct = Math.min(100, (subtotal / freeShippingLimit) * 100);
-        shippingBar.style.width = `${pct}%`;
-        const diff = freeShippingLimit - subtotal;
-        shippingMsg.innerText = `Add Rs. ${diff.toLocaleString()} for FREE Delivery!`;
-      }
+      shippingBar.style.width = '100%';
+      shippingMsg.innerText = "🎉 FREE Delivery on Every Order!";
     }
 
     function saveOrderToHistory(orderItems, notes = '') {
